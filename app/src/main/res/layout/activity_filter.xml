@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.view.RevealBackgroundView
+        android:id="@+id/vRevealBackgroundFilter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/activity_filter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 顶部 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <ImageButton
+                    android:id="@+id/btnBackFilter"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_arrow_back_white_24dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- 撤销 -->
+                <ImageButton
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:id="@+id/btnReset"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_return" />
+
+                <ImageButton
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_edit_white_24dp" />
+
+                <ImageButton
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_edit_white_24dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/btnShare"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_share" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <!-- 中部相机预览 -->
+        <com.example.view.SquaredFrameLayout
+            android:id="@+id/squareFrameLayoutFilter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/pictureView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.example.view.SquaredFrameLayout>
+
+        <!-- 底部 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvFiltersFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

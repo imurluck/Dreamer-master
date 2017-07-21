@@ -1,0 +1,96 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_marker_info"
+    android:visibility="gone"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:fadingEdge="vertical"
+    android:clickable="true" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/id_name_line"
+        android:layout_alignTop="@+id/id_scroll">
+
+
+        <!-- 名字 -->
+        <TextView
+            android:id="@+id/id_marker_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_margin="4dp"
+            android:textColor="#ef064c" />
+
+        <!-- 关闭 button-->
+        <ImageButton
+            android:id="@+id/id_close_popup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:background="@android:drawable/ic_menu_close_clear_cancel" />
+
+    </RelativeLayout>
+
+    <!-- 新滑动图 -->
+    <RelativeLayout
+        android:id="@+id/id_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scrollbars="none" />
+
+    </RelativeLayout>
+
+
+    <!--缩略图下方菜单 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <!--<TextView-->
+                <!--android:id="@+id/id_picture_title"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="#FFF5EB" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/id_point_text"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="#FFF5EB" />-->
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/cameraButton"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@android:drawable/ic_menu_camera" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
+

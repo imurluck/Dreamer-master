@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Address: "/>
+
+        <EditText
+            android:id="@+id/address_edit"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Latitude: "/>
+
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/latitude_edit" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="Longitude: "/>
+
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/longitude_edit" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:padding="0dp">
+
+        <Button
+            android:id="@+id/cancel_add_palce"
+            android:layout_width="110dp"
+            android:layout_height="60dp"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:padding="0dp"
+            android:background="@color/cardview_light_background" />
+
+        <Button
+            android:layout_width="110dp"
+            android:layout_height="60dp"
+            android:id="@+id/confirm_add_place"
+            android:text="Confirm"
+            android:textAllCaps="false"
+            android:padding="0dp"
+            android:layout_toRightOf="@+id/cancel_add_palce"
+            android:background="@color/cardview_light_background"/>
+    </RelativeLayout>
+</LinearLayout>

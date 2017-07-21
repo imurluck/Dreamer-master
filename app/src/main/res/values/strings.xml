@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">dreamera-master</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_main">Dreamera Map</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <!--add on 2016-06-07 by 10405-->
+    <string name="title_activity_camera">CameraActivity</string>
+
+    <string name="adjustAlpha">Alpha&#160;&#160;</string>
+    <string name="adjustRange">Region</string>
+
+    <string name="action_map">Show Old Map</string>
+    <string name="action_clear_map">Clear Old Map</string>
+</resources>

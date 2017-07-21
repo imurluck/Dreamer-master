@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_fusion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#16181a">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- 顶部 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_arrow_back_white_24dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- 撤销 -->
+                <ImageButton
+                    android:id="@+id/btnRedo"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_edit_white_24dp" />
+
+                <ImageButton
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_edit_white_24dp" />
+
+                <ImageButton
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_edit_white_24dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/btnNextActivity"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/btn_default_light"
+                    android:src="@mipmap/ic_arrow_forward_white_24dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <!-- 中部相机预览 -->
+        <com.example.view.SquaredFrameLayout
+            android:id="@+id/squareFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/photoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.example.view.SquaredFrameLayout>
+
+        <!-- 底部 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <!-- 透明度滑块 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/adjustAlpha"
+                        android:textColor="@color/colorBanner"
+                        android:gravity="center" />
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/id_alpha"
+                        android:thumb="@mipmap/ic_cloud"
+                        android:max="255"
+                        android:maxHeight="5dp"
+                        android:layout_gravity="center"
+                        android:progressDrawable="@drawable/po_seekbar"
+                        android:progress="0" />
+
+                </LinearLayout>
+
+                <!-- 范围滑块 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="@string/adjustRange"
+                        android:textColor="@color/colorBanner"
+                        android:gravity="center" />
+
+                    <SeekBar
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/id_blur"
+                        android:thumb="@mipmap/ic_cloud"
+                        android:maxHeight="5dp"
+                        android:layout_gravity="center"
+                        android:max="99"
+                        android:progressDrawable="@drawable/po_seekbar"
+                        android:progress="0" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
