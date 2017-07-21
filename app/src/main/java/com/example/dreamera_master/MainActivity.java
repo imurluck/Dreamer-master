@@ -73,10 +73,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
+        /**if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }*/
         setContentView(R.layout.activity_main);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        //mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -86,10 +93,10 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
-        View headerView = mNavigationView.inflateHeaderView(R.layout.nav_header);
+        //View headerView = mNavigationView.inflateHeaderView(R.layout.nav_header);
         //setNavigationHeaderListener();
-        setNavigationMenuListener();
-        initViewPager();//初始化ViewPager
+        //setNavigationMenuListener();
+        //initViewPager();//初始化ViewPager
         applyPermission();
     }
 
@@ -208,8 +215,9 @@ public class MainActivity extends AppCompatActivity {
                 .LENGTH_SHORT).show();
                 break;
             case R.id.exit_application:
-                Toast.makeText(this, "Exit application----uncompelete", Toast
-                .LENGTH_SHORT).show();
+                /**Toast.makeText(this, "Exit application----uncompelete", Toast
+                .LENGTH_SHORT).show();*/
+                finish();
                 break;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -220,22 +228,22 @@ public class MainActivity extends AppCompatActivity {
      }
 
      private void initViewPager() {
-         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-         viewPager = (ViewPager) findViewById(R.id.view_pager);
+         //tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+         //viewPager = (ViewPager) findViewById(R.id.view_pager);
 
          postFragment = new PostFragment();
          //putFragment = new PutFragment();
          //deleteFragment = new DeleteFragment();
-         getFragment = new GetFragment();
+         //getFragment = new GetFragment();
          fragmentList.add(postFragment);
          //fragmentList.add(putFragment);
          //fragmentList.add(deleteFragment);
-         fragmentList.add(getFragment);
+         //fragmentList.add(getFragment);
 
-         tabTitles.add(new String("Post"));
+         tabTitles.add(new String("地图"));
          //tabTitles.add(new String("Put"));
          //tabTitles.add(new String("Delete"));
-         tabTitles.add(new String("Get"));
+         //tabTitles.add(new String("Get"));
          FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(),
                  fragmentList, tabTitles);
          //viewPager.setOffscreenPageLimit(3);

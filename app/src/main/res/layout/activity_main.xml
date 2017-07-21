@@ -26,12 +26,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="dreamera-master"
+                android:text="管理员"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
         </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.TabLayout
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/post_fragment"
+            android:name="com.example.dreamera_master.PostFragment" />
+
+        <!--<android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,14 +52,21 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#FFF" />
+            android:background="#FFF" />-->
 
     </LinearLayout>
 
+    <!--
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/nav_menu" />
+        app:menu="@menu/nav_menu" />-->
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/get_fragment"
+        android:name="com.example.dreamera_master.GetFragment"
+        android:layout_gravity="start" />
 </android.support.v4.widget.DrawerLayout>

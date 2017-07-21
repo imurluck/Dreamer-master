@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/exit_application"
-        android:title="exit application"
+        android:title="退出应用"
         app:showAsAction="never"  />
 
     <item
         android:id="@+id/login_out"
-        android:title="login out"
+        android:title="注销"
         app:showAsAction="never" />
 </menu>

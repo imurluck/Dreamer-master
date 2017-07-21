@@ -46,12 +46,13 @@
                     android:src="@mipmap/ic_edit_white_24dp" />
 
                 <ImageButton
+                    android:id="@+id/btnPost"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:background="@drawable/btn_default_light"
-                    android:src="@mipmap/ic_edit_white_24dp" />
+                    android:src="@mipmap/ic_post" />
 
                 <ImageButton
                     android:layout_width="36dp"

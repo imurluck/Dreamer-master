@@ -35,7 +35,6 @@ public class MyPlaceRecyclerAdapter extends RecyclerView.Adapter<MyPlaceRecycler
     @Override
     public boolean onLongClick(View v) {
         if (mOnItemLongClickListener != null) {
-            mOnItemLongClickListener.onItemLongClick(v, currentPosition);
             mOnItemLongClickListener.onItemLongClick(v, (int) v.getTag());
         }
         return true;

@@ -16,19 +16,28 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.example.adapter.PopWindowRecyclerAdapter;
 import com.example.dreamera_master.CameraActivity;
+import com.example.dreamera_master.MyApplication;
+import com.example.dreamera_master.PostFragment;
 import com.example.dreamera_master.R;
 import com.example.interfaces.OnItemClickListener;
 import com.example.utils.AsyncGetDataUtil;
+import com.example.utils.HttpUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 
 /**
@@ -57,7 +66,11 @@ public class MarkerPopupWindowView extends PopupWindow {
 
     private View lastView;
 
+    private static String pictureId;
+
     private List<HashMap<String, String>> pictureList = new ArrayList<HashMap<String, String>>();
+
+    private static HashMap<String, String> paraMap = new HashMap<String, String>();
 
     private RecyclerView galleryRecycler;
     public MarkerPopupWindowView(Context context, BaiduMap mBaiduMap, List<HashMap<String, String>> pictureList,
@@ -125,14 +138,52 @@ public class MarkerPopupWindowView extends PopupWindow {
                 int[] startingLocation = new int[2];
                 floatingActionButton.getLocationOnScreen(startingLocation);
                 startingLocation[0] += floatingActionButton.getWidth() / 2;
-                String pictureId = pictureList.get(position).get("pictureId");
+                pictureId = pictureList.get(position).get("pictureId");
                 String pictureUrl = pictureList.get(position).get("pictureUrl");
+                String placeId = pictureList.get(position).get("placeId");
+                String datetime = pictureList.get(position).get("datetime");
+                String timeStr = pictureList.get(position).get("timeStr");
+                String title = pictureList.get(position).get("title");
+                if (!paraMap.isEmpty()) {
+                    paraMap.clear();
+                }
+                paraMap.put("title", title);
+                paraMap.put("time_str", timeStr);
+                paraMap.put("datetime", datetime);
+                paraMap.put("place", placeId);
+                paraMap.put("latitude", String.valueOf(PostFragment
+                        .getCurrentLocation().getLatitude()));
+                paraMap.put("longitude", String.valueOf(PostFragment
+                        .getCurrentLocation().getLongitude()));
                 Log.e(TAG, "pictureId = " + pictureId);
                 CameraActivity.startCameraFromLocation(startingLocation, activity, pictureId, pictureUrl);
                 activity.overridePendingTransition(0, 0);
             }
         });
         lastView = view;
+    }
+
+    public static void putPictureLocation() {
+        if (pictureId != null && !paraMap.isEmpty()) {
+            HttpUtil.putPicture(pictureId, paraMap, null, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Toast.makeText(MyApplication.getContext(), "上传失败",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseContent = response.body().string();
+                    Log.e(TAG, "responseContent : " + responseContent);
+                    Toast.makeText(MyApplication.getContext(), "上传成功",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(MyApplication.getContext(), "paraMap为空",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static class AsyncGetPicTask extends AsyncTask<Void, Void, Void> {

@@ -97,6 +97,10 @@ public class PostFragment extends Fragment implements View.OnClickListener {
 
     private double tagPositionLongitude = 0;
 
+    private static BDLocation currentLocation;
+
+    private BDLocation lastLocation;
+
     private Marker marker = null;
 
     private InfoWindow mInfoWindow = null;
@@ -117,6 +121,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
 
     private BMapControlUtil mBMapControlUtil;
 
+    private FloatingActionButton locationFloatingButton;
+
     public PostFragment() {
         // Required empty public constructor
     }
@@ -134,6 +140,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         showImage = (ImageView) view.findViewById(R.id.show_image);*/
         addPlace = (FloatingActionButton) view.findViewById(R.id.floating_button);
         mapView = (MapView) view.findViewById(R.id.bd_map_view);
+        locationFloatingButton = (FloatingActionButton) view.findViewById(
+                R.id.location_floating_button);
         baiduMap = mapView.getMap();
         baiduMap.setMyLocationEnabled(true);
         //chooseDatetime.setOnClickListener(this);
@@ -142,6 +150,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         mLocationClient.registerLocationListener(new MyLocationListener());
         mBMapControlUtil = new BMapControlUtil(getActivity(), baiduMap);
         requestLocation();
+        navigateToCurrentLocation();
         tagMap();
         if (isTaged == false) {
             addPlace.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +164,15 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    public void navigateToCurrentLocation() {
+        locationFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isFirstLocate = true;
+                navigateTo(currentLocation);
+            }
+        });
+    }
 
     private void tagMap() {
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
@@ -307,9 +325,9 @@ public class PostFragment extends Fragment implements View.OnClickListener {
     private void navigateTo(BDLocation location) {
         if (isFirstLocate) {
             LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-            MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
+            MapStatusUpdate update = MapStatusUpdateFactory.zoomTo(16f);
             baiduMap.animateMapStatus(update);
-            update = MapStatusUpdateFactory.zoomTo(16f);
+            update = MapStatusUpdateFactory.newLatLng(ll);
             baiduMap.animateMapStatus(update);
             isFirstLocate = false;
         }
@@ -323,11 +341,17 @@ public class PostFragment extends Fragment implements View.OnClickListener {
     public class MyLocationListener implements BDLocationListener {
 
         public void onReceiveLocation(BDLocation location) {
+            currentLocation = location;
+            Log.d("PostFragment", "latitude " + location.getLatitude());
+            Log.d("PostFragment", "longitude " + location.getLongitude());
             Log.d("PostFragment", "have not get in ");
             if (location.getLocType() == BDLocation.TypeGpsLocation
                 || location.getLocType() == BDLocation.TypeNetWorkLocation) {
                 navigateTo(location);
                 Log.d("PostFragment", "have been in here");
+            } else {
+                Toast.makeText(getActivity(), "当前无法定位",
+                        Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -335,9 +359,14 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         public void onConnectHotSpotMessage(String s, int i) {
         }
     }
+
+    public static BDLocation getCurrentLocation() {
+        return currentLocation;
+    }
     @Override
     public void onResume() {
         super.onResume();
+        mBMapControlUtil.addMarkerOnMap();
         mapView.onResume();
     }
 
@@ -436,4 +465,5 @@ public class PostFragment extends Fragment implements View.OnClickListener {
             progressDialog.dismiss();
         }
     }
+
 }

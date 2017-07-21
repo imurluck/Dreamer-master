@@ -43,13 +43,13 @@ public class BMapControlUtil {
 
     private MarkerPopupWindowView popupWindowView;
 
-    private ArrayList<HashMap<String, Object>> pointList;
+    private  ArrayList<HashMap<String, Object>> pointList;
 
     public BMapControlUtil(final Activity activity, final BaiduMap mBaiduMap) {
         this.activity = activity;
         this.mBaiduMap = mBaiduMap;
         mClusterManager = new ClusterManager<MyItem>(activity, mBaiduMap);
-        addMarkerOnMap();
+        //addMarkerOnMap();
         mBaiduMap.setOnMarkerClickListener(mClusterManager);
         mBaiduMap.setOnMapStatusChangeListener(mClusterManager);
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener() {
@@ -65,10 +65,16 @@ public class BMapControlUtil {
                         String pictureTitie = pictureItem.getString("title");
                         String pictureUrl = pictureItem.getString("picture");
                         String pictureId = pictureItem.getString("id");
+                        String placeId = pictureItem.getString("place");
+                        String datetime = pictureItem.getString("datetime");
+                        String timeStr = pictureItem.getString("time_str");
                         HashMap<String, String> map = new HashMap<String, String>();
                         map.put("title", pictureTitie);
                         map.put("pictureUrl", pictureUrl);
                         map.put("pictureId", pictureId);
+                        map.put("placeId", placeId);
+                        map.put("datetime", datetime);
+                        map.put("timeStr", timeStr);
                         pictureList.add(map);
                     }
                 } catch (JSONException e) {
@@ -81,7 +87,7 @@ public class BMapControlUtil {
         });
     }
 
-    private void addMarkerOnMap() {
+    public void addMarkerOnMap() {
         HttpUtil.getPlaces(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -110,6 +116,7 @@ public class BMapControlUtil {
                         items.add(new MyItem(latLngMarker, item.get("name").toString(),
                                 item.get("cross_pictures").toString()));
                     }
+                    mClusterManager.clearItems();
                     mClusterManager.addItems(items);
                 }
 

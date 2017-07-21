@@ -29,6 +29,7 @@ import com.example.utils.APPUtils;
 import com.example.utils.AsyncGetDataUtil;
 import com.example.utils.FileCacheUtil;
 import com.example.utils.ImgToolKits;
+import com.example.view.MarkerPopupWindowView;
 import com.example.view.SquaredFrameLayout;
 
 import java.io.File;
@@ -55,6 +56,8 @@ public class FusionActivity extends AppCompatActivity {
     SeekBar blurSeekBar;
     @BindView(R.id.btnNextActivity)
     ImageButton nextButton;
+    @BindView(R.id.btnPost)
+    ImageButton postLocationButton;
 
     private String id;                           //图片的id
     private Matrix matrix = new Matrix();        //前一个Activity传回的矩阵参数
@@ -99,7 +102,16 @@ public class FusionActivity extends AppCompatActivity {
         photoBitmap = AsyncGetDataUtil.getPhotoFromFile(); //取出拍摄的图片;
         photoView.setBackground(new BitmapDrawable(photoBitmap));
         initOldPicture();      //初始化老照片
+        postLocation();
+    }
 
+    public void postLocation() {
+        postLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MarkerPopupWindowView.putPictureLocation();
+            }
+        });
     }
 
     /**

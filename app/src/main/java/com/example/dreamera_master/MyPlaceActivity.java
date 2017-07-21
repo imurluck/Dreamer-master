@@ -48,6 +48,14 @@ public class MyPlaceActivity extends AppCompatActivity {
     private static  SwipeRefreshLayout swipeRefreshLayout;
 
     private Place concretePlace;
+
+    /**private Handler handler = new Handler() {
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case
+            }
+        }
+    }*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +78,6 @@ public class MyPlaceActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setVisibility(View.GONE);
         refreshPictures();
-        loadingPictures(placeId);
         addPicture();
     }
 
@@ -83,6 +90,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         });
     }
     private  void loadingPictures(String placeId) {
+        Log.e("MyPlaceActivity", "loadingPictures");
         HttpUtil.getConCretePlace(placeId, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -110,6 +118,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemLongClick(View view, int position) {
                          Log.e("MyPlaceActivity", "position is " + position);
+                                    Log.e("MyPlaceActivity", "OnLongClick");
                                     showDialogForDeletePicture(position);
                                 }
                             });
@@ -125,9 +134,10 @@ public class MyPlaceActivity extends AppCompatActivity {
     }
 
     private void showDialogForDeletePicture(final int position) {
+        Log.e("MyPlaceActivtiy", "ShowDialogForDeletePicture");
         AlertDialog.Builder alert = new AlertDialog.Builder(MyPlaceActivity.this);
-        alert.setTitle("Delete this picture?")
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        alert.setTitle("删除此图片?")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String pictureId = String.valueOf(concretePlace.getPicturesList().get(position).getPictureId());
@@ -145,12 +155,13 @@ public class MyPlaceActivity extends AppCompatActivity {
                                     public void run() {
                                         Toast.makeText(MyPlaceActivity.this,
                                                 "Delete completed!", Toast.LENGTH_SHORT).show();
+
                                     }
                                 });
                             }
                         });
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

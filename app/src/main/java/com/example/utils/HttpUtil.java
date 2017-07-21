@@ -1,5 +1,7 @@
 package com.example.utils;
 
+import android.support.annotation.NonNull;
+
 import java.io.File;
 import java.util.Map;
 import java.util.Set;
@@ -100,9 +102,14 @@ public class HttpUtil {
                 .build();
         okHttpClient.newCall(request).enqueue(callback);
     }
-    public static void putPicture(String pictureId, Map<String, String> paraMap, String imgPath, okhttp3.Callback callback) {
+    public static void putPicture(String pictureId, Map<String, String> paraMap, @NonNull String imgPath, okhttp3.Callback callback) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        File img = new File(imgPath);
+        File img;
+        if (imgPath != null) {
+            img = new File(imgPath);
+        } else {
+            img = null;
+        }
         Set<String> keySet = paraMap.keySet();
         for (String key : keySet) {
             builder.addFormDataPart(key, paraMap.get(key));
@@ -117,6 +124,7 @@ public class HttpUtil {
                 .build();
         okHttpClient.newCall(request).enqueue(callback);
     }
+
     public static void deletePicture(String pictureId, okhttp3.Callback callback) {
         Request request = new Request.Builder()
                 .url(BASE_PICTURE + pictureId + "/")

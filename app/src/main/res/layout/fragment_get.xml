@@ -3,8 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/white"
     tools:context="com.example.dreamera_master.GetFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center"
+        android:background="@color/colorPrimary"
+        android:text="地点"
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/get_fragment_place_refresh"
         android:layout_width="match_parent"

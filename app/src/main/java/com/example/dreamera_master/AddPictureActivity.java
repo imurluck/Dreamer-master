@@ -166,6 +166,7 @@ public class AddPictureActivity extends AppCompatActivity {
                                 public void run() {
                                     Toast.makeText(AddPictureActivity.this, "Post completed!",
                                             Toast.LENGTH_SHORT).show();
+                                    finish();
                                 }
                             });
                         }

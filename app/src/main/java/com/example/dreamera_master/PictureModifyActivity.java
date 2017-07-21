@@ -80,9 +80,6 @@ public class PictureModifyActivity extends AppCompatActivity {
                 case MODIFY_COMPLETED:
                     Toast.makeText(PictureModifyActivity.this, "Modify completed!",
                             Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(PictureModifyActivity.this, MyPictureActivity.class);
-                    intent.putExtra("picture_data", myPicture);
-                    startActivity(intent);
                     /**Intent intent = new Intent(PictureModifyActivity.this, MyPictureActivity.class);
                     intent.putExtra("picture_data", myPicture);
                     startActivity(intent);*/
@@ -129,9 +126,6 @@ public class PictureModifyActivity extends AppCompatActivity {
              @Override
              public void onClick(View v) {
                  finish();
-                 Intent intent = new Intent(PictureModifyActivity.this, MyPictureActivity.class);
-                 intent.putExtra("picture_data", myPicture);
-                 startActivity(intent);
              }
          });
      }

@@ -169,8 +169,8 @@ public class GetFragment extends Fragment {
                 SharedPreferences prefs = getActivity().getSharedPreferences("places", MODE_PRIVATE);
                 placeId = prefs.getString(currentString, "");
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                        alert.setTitle("Delete this Place?")
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                        alert.setTitle("删除此地点?")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 swipeRefresh.setRefreshing(true);
@@ -189,7 +189,7 @@ public class GetFragment extends Fragment {
                                     }
                                 });
                             }
-                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
