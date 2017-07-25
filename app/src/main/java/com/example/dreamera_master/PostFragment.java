@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -51,6 +52,7 @@ import com.example.utils.BMapControlUtil;
 import com.example.utils.HttpUtil;
 import com.example.utils.ParseJSON;
 import com.example.utils.Place;
+import com.example.utils.navigationutils.NavigationUtil;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -72,6 +74,8 @@ import okhttp3.Response;
  * A simple {@link Fragment} subclass.
  */
 public class PostFragment extends Fragment implements View.OnClickListener {
+
+    private static final String TAG = "PostFragment";
 
     private Button chooseDatetime;
 
@@ -123,8 +127,11 @@ public class PostFragment extends Fragment implements View.OnClickListener {
 
     private FloatingActionButton locationFloatingButton;
 
+    private NavigationUtil mNavigationUtil;
+
     public PostFragment() {
         // Required empty public constructor
+        Log.e(TAG, "postFragment excute");
     }
 
 
@@ -134,6 +141,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_post, container, false);
+        Log.e(TAG, "PostFragment -- onCreateView");
         /**chooseDatetime = (Button) view.findViewById(R.id.choose_datatime);
         datetimeText = (TextView) view.findViewById(R.id.datatime_text);
         addPicture = (Button) view.findViewById(R.id.add_picture);
@@ -148,7 +156,6 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         //addPicture.setOnClickListener(this);
         mLocationClient = new LocationClient(getActivity().getApplication());
         mLocationClient.registerLocationListener(new MyLocationListener());
-        mBMapControlUtil = new BMapControlUtil(getActivity(), baiduMap);
         requestLocation();
         navigateToCurrentLocation();
         tagMap();
@@ -162,6 +169,21 @@ public class PostFragment extends Fragment implements View.OnClickListener {
             });
         }
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.e(TAG, "postFragment -- onActivityCreated");
+        if (MainActivity.mNavigationUtil != null) {
+            this.mNavigationUtil = MainActivity.mNavigationUtil;
+        } else {
+            Toast.makeText(getActivity(), "百度导航引擎无法使用", Toast.LENGTH_SHORT).show();
+        }
+        if (mNavigationUtil.initDirs()) {
+            mNavigationUtil.initNavi();
+        }
+        mBMapControlUtil = new BMapControlUtil(getActivity(), baiduMap, mNavigationUtil);
     }
 
     public void navigateToCurrentLocation() {

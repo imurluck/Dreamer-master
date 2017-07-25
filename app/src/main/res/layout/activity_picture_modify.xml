@@ -52,14 +52,15 @@
         <EditText
             android:id="@+id/picture_modify_title"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/edite_text"
             android:cursorVisible="true"
             android:gravity="center_vertical"
-            android:hint="Title"
+            android:hint="标题"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -67,12 +68,13 @@
         <EditText
             android:id="@+id/picture_modify_time_str"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Time_str"
+            android:hint="时间描述"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -80,12 +82,13 @@
         <EditText
             android:id="@+id/picture_modify_detail_title"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Detail_title"
+            android:hint="地点详细描述（暂时可以不填）"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -93,12 +96,13 @@
         <EditText
             android:id="@+id/picture_modify_detail_url"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Detail url(can be null)"
+            android:hint="详细描述网址（可以不填）"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -106,12 +110,13 @@
         <EditText
             android:id="@+id/picture_modify_like_count"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Like count(can be null)"
+            android:hint="相似地点个数（可以不填）"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -119,12 +124,13 @@
         <EditText
             android:id="@+id/picture_modify_longtitude"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Logitude"
+            android:hint="经度（暂时可以不填）"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -132,12 +138,13 @@
         <EditText
             android:id="@+id/picture_modify_latitude"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Latitude"
+            android:hint="纬度（暂时可以不填）"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -145,19 +152,21 @@
         <EditText
             android:id="@+id/picture_modify_altitude"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="Altitude(can be null)"
+            android:hint="海拔（可以不填）"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:orientation="horizontal">
@@ -170,7 +179,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button"
-                android:text="Choose photo"
+                android:text="选择相片（必选）"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
@@ -181,7 +190,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button"
-                android:text="Choose time"
+                android:text="选择日期（必选）"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -189,24 +198,27 @@
         <Button
             android:id="@+id/picture_modify_cancel"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/button"
-            android:text="Cancel"
+            android:text="取消"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 
         <Button
             android:id="@+id/picture_modify_modify"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/button"
-            android:text="Modify"
+            android:text="确认修改"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
 

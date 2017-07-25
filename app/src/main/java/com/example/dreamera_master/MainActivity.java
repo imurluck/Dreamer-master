@@ -23,7 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.navisdk.adapter.BNCommonSettingParam;
+import com.baidu.navisdk.adapter.BNOuterLogUtil;
+import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.example.adapter.FragmentAdapter;
+import com.example.utils.navigationutils.NavigationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout.Tab getTab;
 
+
+    public static NavigationUtil mNavigationUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,13 +88,19 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }*/
         setContentView(R.layout.activity_main);
+        BNOuterLogUtil.setLogSwitcher(true);
+        Bundle bundle = new Bundle();
+        // 必须设置APPID，否则会静音
+        bundle.putString(BNCommonSettingParam.TTS_APP_ID, "9626656");
+        BNaviSettingManager.setNaviSdkParam(bundle);
+        mNavigationUtil = new NavigationUtil(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        Log.d("MainActivity", "actionbar is empty");
+        Log.e("MainActivity", "actionbar is empty");
         if (actionBar != null) {
             Log.d("MainActivity", "actionBar is not empty");
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -98,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         //setNavigationMenuListener();
         //initViewPager();//初始化ViewPager
         applyPermission();
+        Log.e("MainActivtiy", "MainActivtiy excute");
     }
 
     private void applyPermission() {
@@ -118,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.CAMERA);
         }
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission
+        .RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.RECORD_AUDIO);
+        }
 
         if (!permissionList.isEmpty()) {
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
@@ -127,19 +145,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.e("MainActivity", "onRequestPermissionResult");
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0) {
                     for (int result : grantResults) {
                         if (result != PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(MainActivity.this, "You can use the app by aggreeing all the permissions",
+                            Toast.makeText(MainActivity.this, "您必须全部同意才能使用本应用",
                                     Toast.LENGTH_SHORT).show();
                             finish();
                             return ;
                         }
                     }
+                    if (mNavigationUtil.initDirs()) {
+                        mNavigationUtil.initNavi();
+                    }
                 } else {
-                    Toast.makeText(MainActivity.this, "something wrong happen",
+                    Toast.makeText(MainActivity.this, "权限申请失败",
                             Toast.LENGTH_SHORT).show();
                     finish();
                 }

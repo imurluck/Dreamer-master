@@ -120,7 +120,6 @@ public class MyPictureActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 Intent intent = new Intent(MyPictureActivity.this, PictureModifyActivity.class);
                 //intent.putExtra("pictureId", myPicture.getPictureId());
                 //intent.putExtra("placeId", myPicture.getPlaceId());

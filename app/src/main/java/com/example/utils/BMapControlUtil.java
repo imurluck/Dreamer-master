@@ -14,6 +14,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.example.dreamera_master.R;
 import com.example.utils.clusterutil.clustering.ClusterItem;
 import com.example.utils.clusterutil.clustering.ClusterManager;
+import com.example.utils.navigationutils.NavigationUtil;
 import com.example.view.MarkerPopupWindowView;
 
 import org.json.JSONArray;
@@ -43,11 +44,14 @@ public class BMapControlUtil {
 
     private MarkerPopupWindowView popupWindowView;
 
+    private NavigationUtil mNavigationUtil;
+
     private  ArrayList<HashMap<String, Object>> pointList;
 
-    public BMapControlUtil(final Activity activity, final BaiduMap mBaiduMap) {
+    public BMapControlUtil(final Activity activity, final BaiduMap mBaiduMap, NavigationUtil navigationUtil) {
         this.activity = activity;
         this.mBaiduMap = mBaiduMap;
+        this.mNavigationUtil = navigationUtil;
         mClusterManager = new ClusterManager<MyItem>(activity, mBaiduMap);
         //addMarkerOnMap();
         mBaiduMap.setOnMarkerClickListener(mClusterManager);
@@ -68,6 +72,8 @@ public class BMapControlUtil {
                         String placeId = pictureItem.getString("place");
                         String datetime = pictureItem.getString("datetime");
                         String timeStr = pictureItem.getString("time_str");
+                        String pictureLongitude = pictureItem.getString("longitude");
+                        String pictureLatitude = pictureItem.getString("latitude");
                         HashMap<String, String> map = new HashMap<String, String>();
                         map.put("title", pictureTitie);
                         map.put("pictureUrl", pictureUrl);
@@ -75,12 +81,22 @@ public class BMapControlUtil {
                         map.put("placeId", placeId);
                         map.put("datetime", datetime);
                         map.put("timeStr", timeStr);
+                        if (pictureLongitude == null || pictureLongitude.equals("0.0")) {
+                            map.put("pictureLongitude", null);
+                        } else {
+                            map.put("pictureLongitude", pictureLongitude);
+                        }
+                        if (pictureLatitude == null || pictureLatitude.equals("0.0")) {
+                            map.put("pictureLatitude", null);
+                        } else {
+                            map.put("pictureLatitude", pictureLatitude);
+                        }
                         pictureList.add(map);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                popupWindowView = new MarkerPopupWindowView(activity, mBaiduMap, pictureList, placeName);
+                popupWindowView = new MarkerPopupWindowView(activity, mBaiduMap, pictureList, placeName, mNavigationUtil);
                 popupWindowView.showAtLocation(activity.findViewById(R.id.bd_map_view), Gravity.BOTTOM, -20, -20);
                 return false;
             }

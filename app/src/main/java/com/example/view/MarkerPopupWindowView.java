@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.example.adapter.PopWindowRecyclerAdapter;
 import com.example.dreamera_master.CameraActivity;
 import com.example.dreamera_master.MyApplication;
@@ -27,6 +28,7 @@ import com.example.dreamera_master.R;
 import com.example.interfaces.OnItemClickListener;
 import com.example.utils.AsyncGetDataUtil;
 import com.example.utils.HttpUtil;
+import com.example.utils.navigationutils.NavigationUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -56,6 +58,8 @@ public class MarkerPopupWindowView extends PopupWindow {
 
     private ImageButton closeButton;
 
+    private ImageButton navigationButton;
+
     private TextView nameText;
 
     private String placeName;
@@ -64,9 +68,17 @@ public class MarkerPopupWindowView extends PopupWindow {
 
     private PopWindowRecyclerAdapter adapter;
 
+    private NavigationUtil mNavigationUtil;
+
     private View lastView;
 
+    private String pictureLongitude = null;
+
+    private String pictureLatitude = null;
+
     private static String pictureId;
+
+    private static String pictureUrl;
 
     private List<HashMap<String, String>> pictureList = new ArrayList<HashMap<String, String>>();
 
@@ -74,8 +86,9 @@ public class MarkerPopupWindowView extends PopupWindow {
 
     private RecyclerView galleryRecycler;
     public MarkerPopupWindowView(Context context, BaiduMap mBaiduMap, List<HashMap<String, String>> pictureList,
-                                 String placeName) {
+                                 String placeName, NavigationUtil navigationUtil) {
         super(((Activity)context));
+        this.mNavigationUtil = navigationUtil;
         this.mBaiduMap = mBaiduMap;
         this.activity = (Activity) context;
         this.placeName = placeName;
@@ -85,6 +98,7 @@ public class MarkerPopupWindowView extends PopupWindow {
         nameText = (TextView) popupView.findViewById(R.id.id_marker_name);
         galleryRecycler = (RecyclerView) popupView.findViewById(R.id.pop_window_recycler);
         floatingActionButton = (FloatingActionButton) popupView.findViewById(R.id.pop_window_floating);
+        navigationButton = (ImageButton) popupView.findViewById(R.id.navigation_img);
         floatingActionButton.setVisibility(View.GONE);
         /**closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +116,14 @@ public class MarkerPopupWindowView extends PopupWindow {
         //this.update();
         ColorDrawable dw = new ColorDrawable(0);
         this.setBackgroundDrawable(dw);
-
+        navigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToPicture(String.valueOf(PostFragment.getCurrentLocation().getLongitude()),
+                        String.valueOf(PostFragment.getCurrentLocation().getLatitude()),
+                        pictureLongitude, pictureLatitude);
+            }
+        });
     }
 
     private void initViews() {
@@ -132,35 +153,72 @@ public class MarkerPopupWindowView extends PopupWindow {
         }
         view.findViewById(R.id.pop_window_item_selected_tag).setVisibility(View.VISIBLE);
         floatingActionButton.setVisibility(View.VISIBLE);
+        pictureId = pictureList.get(position).get("pictureId");
+        pictureUrl = pictureList.get(position).get("pictureUrl");
+        String placeId = pictureList.get(position).get("placeId");
+        String datetime = pictureList.get(position).get("datetime");
+        String timeStr = pictureList.get(position).get("timeStr");
+        String title = pictureList.get(position).get("title");
+        pictureLongitude = pictureList.get(position).get("pictureLongitude");
+        pictureLatitude = pictureList.get(position).get("pictureLatitude");
+        Log.e(TAG, "pictureLongitude -- " + pictureLongitude);
+        Log.e(TAG, "pictureLatitude -- " + pictureLatitude);
+        if (pictureLatitude.equals("null") || pictureLatitude.equals("null")) {
+            Toast.makeText(activity, "此图片未上传经纬度， 无法使用导航功能",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(activity, "此图片可使用导航功能", Toast.LENGTH_SHORT).show();
+        }
+        if (!paraMap.isEmpty()) {
+            paraMap.clear();
+        }
+        paraMap.put("title", title);
+        paraMap.put("time_str", timeStr);
+        paraMap.put("datetime", datetime);
+        paraMap.put("place", placeId);
+        paraMap.put("latitude", String.valueOf(PostFragment
+                .getCurrentLocation().getLatitude()));
+        paraMap.put("longitude", String.valueOf(PostFragment
+                .getCurrentLocation().getLongitude()));
+        Log.e(TAG, "pictureId = " + pictureId);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int[] startingLocation = new int[2];
                 floatingActionButton.getLocationOnScreen(startingLocation);
                 startingLocation[0] += floatingActionButton.getWidth() / 2;
-                pictureId = pictureList.get(position).get("pictureId");
-                String pictureUrl = pictureList.get(position).get("pictureUrl");
-                String placeId = pictureList.get(position).get("placeId");
-                String datetime = pictureList.get(position).get("datetime");
-                String timeStr = pictureList.get(position).get("timeStr");
-                String title = pictureList.get(position).get("title");
-                if (!paraMap.isEmpty()) {
-                    paraMap.clear();
-                }
-                paraMap.put("title", title);
-                paraMap.put("time_str", timeStr);
-                paraMap.put("datetime", datetime);
-                paraMap.put("place", placeId);
-                paraMap.put("latitude", String.valueOf(PostFragment
-                        .getCurrentLocation().getLatitude()));
-                paraMap.put("longitude", String.valueOf(PostFragment
-                        .getCurrentLocation().getLongitude()));
-                Log.e(TAG, "pictureId = " + pictureId);
+
                 CameraActivity.startCameraFromLocation(startingLocation, activity, pictureId, pictureUrl);
                 activity.overridePendingTransition(0, 0);
             }
         });
         lastView = view;
+    }
+
+    public void navigateToPicture( String startLongitude,  String startLatitude,
+                                   String endLongitude,  String endLatitude) {
+                Log.e(TAG, "startLongitude--" + startLongitude);
+                Log.e(TAG, "startLatitude--" + startLatitude);
+                Log.e(TAG, "endLongitude--" + endLongitude);
+                Log.e(TAG, "endLatitude--" + endLatitude);
+                if (endLatitude == null || endLongitude == null) {
+                    Toast.makeText(activity, "请先选择图片", Toast.LENGTH_SHORT).show();
+                } else if (endLatitude.equals("null") || endLongitude.equals("null")) {
+                    Toast.makeText(activity, "此图片未上传经纬度", Toast.LENGTH_SHORT).show();
+                } else if ((Double.valueOf(startLatitude) *10000 - Double.valueOf(endLatitude) * 10000) == 0
+                        && Double.valueOf(startLongitude) * 10000 - Double.valueOf(endLongitude) * 10000 == 0) {
+                    Toast.makeText(activity, "您就在此处，无需导航", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (BaiduNaviManager.isNaviInited()) {
+                        mNavigationUtil.routeplanToNavi(Double.valueOf(startLongitude), Double.valueOf(startLatitude),
+                                Double.valueOf(endLongitude), Double.valueOf(endLatitude));
+                        //pictureLatitude = null;
+                        //pictureLongitude = null;
+                    } else {
+                        Toast.makeText(activity, "百度引擎初始化未成功",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
     }
 
     public static void putPictureLocation() {

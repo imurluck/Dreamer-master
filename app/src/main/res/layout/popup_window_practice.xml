@@ -18,9 +18,27 @@
                 android:id="@+id/id_marker_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello world"
                 android:textColor="#555"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/navigation_img"
+                android:layout_marginRight="5dp"
+                android:text="导航至此处"
+                android:textSize="16sp"
+                android:textColor="#555"
+                android:layout_centerVertical="true"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/navigation_img"
+                android:layout_toLeftOf="@+id/id_close_popup"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/ic_navigation"/>
 
             <ImageButton
                 android:id="@+id/id_close_popup"
