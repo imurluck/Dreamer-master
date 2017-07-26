@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.utils.BlurTransformation;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
 import com.example.utils.MyPicture;
@@ -113,7 +114,9 @@ public class PictureModifyActivity extends AppCompatActivity {
         chooseTime = (Button) findViewById(R.id.picture_modify_choose_time);
         modify = (Button) findViewById(R.id.picture_modify_modify);
         cancel = (Button) findViewById(R.id.picture_modify_cancel);
-        Glide.with(this).load(myPicture.getPictureUrl()).into(imageView);
+        Glide.with(this).load(myPicture.getPictureUrl())
+                .bitmapTransform(new BlurTransformation(this))
+                .into(imageView);
         initEditText();
         choosePhoto();
         chooseTime();
@@ -215,16 +218,18 @@ public class PictureModifyActivity extends AppCompatActivity {
                         }
                     });
                 } else if (!pictureIsChoosed){
-                    Toast.makeText(PictureModifyActivity.this, "Please choose a photo first",
+                    Toast.makeText(PictureModifyActivity.this, "请先选择一张图片",
                             Toast.LENGTH_SHORT).show();
                 } else if (!timeIsChoosed) {
-                    Toast.makeText(PictureModifyActivity.this, "Please choose a time first",
+                    Toast.makeText(PictureModifyActivity.this, "请先选择日期",
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
     private void showImage() {
-         Glide.with(this).load(pictureUrl).into(imageView);
+         Glide.with(this).load(pictureUrl)
+                 .bitmapTransform(new BlurTransformation(this))
+                 .into(imageView);
      }
 }

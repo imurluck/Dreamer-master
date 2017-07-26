@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.utils.BlurTransformation;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
 
@@ -112,7 +113,8 @@ public class AddPictureActivity extends AppCompatActivity {
                 if (data != null) {
                     pictureUrl = HandleImagePath.handleImagePath(data);
                     photoIsChoosed = true;
-                    Glide.with(this).load(pictureUrl).into(imageView);
+                    Glide.with(this).load(pictureUrl)
+                            .bitmapTransform(new BlurTransformation(this)).into(imageView);
                 }
                 break;
             default:

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.example.adapter.PopWindowRecyclerAdapter;
 import com.example.dreamera_master.CameraActivity;
@@ -80,19 +81,22 @@ public class MarkerPopupWindowView extends PopupWindow {
 
     private static String pictureUrl;
 
+    private LatLng placeLatLng;
+
     private List<HashMap<String, String>> pictureList = new ArrayList<HashMap<String, String>>();
 
     private static HashMap<String, String> paraMap = new HashMap<String, String>();
 
     private RecyclerView galleryRecycler;
     public MarkerPopupWindowView(Context context, BaiduMap mBaiduMap, List<HashMap<String, String>> pictureList,
-                                 String placeName, NavigationUtil navigationUtil) {
+                                 String placeName, NavigationUtil navigationUtil, LatLng placeLatLng) {
         super(((Activity)context));
         this.mNavigationUtil = navigationUtil;
         this.mBaiduMap = mBaiduMap;
         this.activity = (Activity) context;
         this.placeName = placeName;
         this.pictureList = pictureList;
+        this.placeLatLng = placeLatLng;
         popupView = LayoutInflater.from(activity).inflate(R.layout.popup_window_practice, null);
         closeButton = (ImageButton) popupView.findViewById(R.id.id_close_popup);
         nameText = (TextView) popupView.findViewById(R.id.id_marker_name);
@@ -163,12 +167,12 @@ public class MarkerPopupWindowView extends PopupWindow {
         pictureLatitude = pictureList.get(position).get("pictureLatitude");
         Log.e(TAG, "pictureLongitude -- " + pictureLongitude);
         Log.e(TAG, "pictureLatitude -- " + pictureLatitude);
-        if (pictureLatitude.equals("null") || pictureLatitude.equals("null")) {
-            Toast.makeText(activity, "此图片未上传经纬度， 无法使用导航功能",
+        /**if (pictureLatitude.equals("null") || pictureLatitude.equals("null")) {
+            Toast.makeText(activity, "此图片未上传经纬度， 导航功能将导航至此地点",
                     Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(activity, "此图片可使用导航功能", Toast.LENGTH_SHORT).show();
-        }
+        }*/
         if (!paraMap.isEmpty()) {
             paraMap.clear();
         }
@@ -201,10 +205,19 @@ public class MarkerPopupWindowView extends PopupWindow {
                 Log.e(TAG, "startLatitude--" + startLatitude);
                 Log.e(TAG, "endLongitude--" + endLongitude);
                 Log.e(TAG, "endLatitude--" + endLatitude);
+                Log.e(TAG, "placeLongitude--" + placeLatLng.longitude);
+                Log.e(TAG, "placeLatitude--" + placeLatLng.latitude);
                 if (endLatitude == null || endLongitude == null) {
                     Toast.makeText(activity, "请先选择图片", Toast.LENGTH_SHORT).show();
                 } else if (endLatitude.equals("null") || endLongitude.equals("null")) {
-                    Toast.makeText(activity, "此图片未上传经纬度", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "此图片未上传经纬度，将导航至此地点", Toast.LENGTH_SHORT).show();
+                    if (BaiduNaviManager.isNaviInited()) {
+                        mNavigationUtil.routeplanToNavi(Double.valueOf(startLongitude), Double.valueOf(startLatitude),
+                                Double.valueOf(placeLatLng.longitude), Double.valueOf(placeLatLng.latitude));
+                    } else {
+                        Toast.makeText(activity, "百度引擎初始化未成功",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 } else if ((Double.valueOf(startLatitude) *10000 - Double.valueOf(endLatitude) * 10000) == 0
                         && Double.valueOf(startLongitude) * 10000 - Double.valueOf(endLongitude) * 10000 == 0) {
                     Toast.makeText(activity, "您就在此处，无需导航", Toast.LENGTH_SHORT).show();

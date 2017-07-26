@@ -96,7 +96,8 @@ public class BMapControlUtil {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                popupWindowView = new MarkerPopupWindowView(activity, mBaiduMap, pictureList, placeName, mNavigationUtil);
+                popupWindowView = new MarkerPopupWindowView(activity, mBaiduMap, pictureList, placeName, mNavigationUtil,
+                        item.getPosition());
                 popupWindowView.showAtLocation(activity.findViewById(R.id.bd_map_view), Gravity.BOTTOM, -20, -20);
                 return false;
             }

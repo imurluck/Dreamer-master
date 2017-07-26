@@ -163,8 +163,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
             addPlace.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "you haven't choose a place," +
-                            "please click the map first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "请先点击地图选择地点", Toast.LENGTH_SHORT).show();
                 }
             });
         }
