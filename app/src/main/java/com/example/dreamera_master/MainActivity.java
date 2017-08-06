@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     private PostFragment postFragment;
 
-    private PutFragment putFragment;
-
     private DeleteFragment deleteFragment;
 
 

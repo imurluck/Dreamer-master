@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.dreamera_master.MyApplication;
 import com.example.dreamera_master.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
 
 public class GetFragmentListAdapter extends BaseAdapter {
 
-    private List<String> placesList = new ArrayList<String>();
+    private List<String> placesList;
 
     private LayoutInflater inflater;
 

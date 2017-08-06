@@ -22,4 +22,8 @@
         <item name="android:windowExitAnimation">@anim/exit_windows</item>
     </style>
 
+    <style name="popup_recommnd_photo_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_vertical</item>
+        <item name="android:windowExitAnimation">@anim/exit_vertical</item>
+    </style>
 </resources>

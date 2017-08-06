@@ -174,14 +174,26 @@
             <Button
                 android:id="@+id/add_picture_choose_photo"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button"
-                android:text="选择相片（必选）"
+                android:text="选择相片（二选一）"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/add_picture_camera"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/button"
+                android:text="拍摄相片（二选一）"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
 
             <Button
                 android:id="@+id/add_picture_choose_time"

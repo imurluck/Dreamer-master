@@ -3,10 +3,16 @@ package com.example.dreamera_master;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.icu.util.Calendar;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -14,11 +20,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bumptech.glide.Glide;
 import com.example.utils.BlurTransformation;
+import com.example.utils.DialogUtil;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
+import com.example.view.RecommendPhotoPopupWindow;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +60,8 @@ public class AddPictureActivity extends AppCompatActivity {
 
     private Button chooseTime;
 
+    private Button camera;
+
     private Button cancel;
 
     private Button addPicture;
@@ -58,6 +71,10 @@ public class AddPictureActivity extends AppCompatActivity {
     private ImageView imageView;
 
     private String placeId;
+
+    private Uri imageUri;
+
+    private RecommendPhotoPopupWindow recommendPhotoPopupWindow;
 
     private Map<String, String> paraMap = new HashMap<String, String>();
 
@@ -77,6 +94,17 @@ public class AddPictureActivity extends AppCompatActivity {
         chooseTime();
         addPicture();
         cancel();
+        recommendPhotoPopupWindow = new RecommendPhotoPopupWindow(this);
+        if (Build.VERSION.SDK_INT <= 23) {
+            findViewById(R.id.add_picture_linear_layout).post(new Runnable() {
+                @Override
+                public void run() {
+                    recommendPhotoPopupWindow.showAtLocation(AddPictureActivity.this
+                                    .findViewById(R.id.add_picture_linear_layout),
+                            Gravity.BOTTOM, 0, 0);
+                }
+            });
+        }
     }
 
     private void initViews() {
@@ -93,6 +121,7 @@ public class AddPictureActivity extends AppCompatActivity {
         cancel = (Button) findViewById(R.id.add_picture_cancel);
         addPicture = (Button) findViewById(R.id.add_picture_add);
         imageView = (ImageView) findViewById(R.id.add_picture_image);
+        camera = (Button) findViewById(R.id.add_picture_camera);
     }
 
     private void getPicture() {
@@ -104,21 +133,152 @@ public class AddPictureActivity extends AppCompatActivity {
                 startActivityForResult(intent, 2);
             }
         });
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File outPutImage = new File(getExternalCacheDir(), "out_image.jpg");
+                try {
+                    if (outPutImage.exists()) {
+                        outPutImage.delete();
+                    }
+                    outPutImage.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (Build.VERSION.SDK_INT >= 24) {
+                    imageUri = FileProvider.getUriForFile(AddPictureActivity.this,
+                            "com.example.dreamera-master.fileprovider",
+                            outPutImage);
+                } else {
+                    imageUri = Uri.fromFile(outPutImage);
+                }
+                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
+    public void showPicture(String pictureUrl) {
+        Glide.with(this).load(pictureUrl)
+                .bitmapTransform(new BlurTransformation(this)).into(imageView);
+        this.photoIsChoosed = true;
+    }
+
+    public void setPictureLatLng(LatLng latLng) {
+        longitudeEdit.setText(String.valueOf(latLng.longitude));
+        latitudeEdit.setText(String.valueOf(latLng.latitude));
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case 1:
+                if (imageUri != null && resultCode == RESULT_OK) {
+                    pictureUrl = imageUri.getPath();
+                    Log.e("AddPictureActivity", imageUri.getPath());
+                    photoIsChoosed = true;
+                    Glide.with(this).load(pictureUrl)
+                            .bitmapTransform(new BlurTransformation(this))
+                            .into(imageView);
+                    try {
+                        ExifInterface exifInterface = new ExifInterface(pictureUrl);
+                        String pictureLongitude = exifInterface
+                                .getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                        String pictureLatitude = exifInterface
+                                .getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                        String pictureLongitudeRef = exifInterface.getAttribute(
+                                ExifInterface.TAG_GPS_LONGITUDE_REF);
+                        String pictureLatitudeRef = exifInterface.getAttribute(
+                                ExifInterface.TAG_GPS_LATITUDE_REF);
+                        if (pictureLatitude != null && pictureLongitude != null) {
+                            CoordinateConverter converter  = new CoordinateConverter();//转化坐标
+                            converter.from(CoordinateConverter.CoordType.GPS);
+                            converter.coord(new LatLng(
+                                    convertRationalLatLonToDouble(pictureLatitude, pictureLatitudeRef),
+                                    convertRationalLatLonToDouble(pictureLongitude, pictureLongitudeRef)));
+                            LatLng desLatLng = converter.convert();
+                            longitudeEdit.setText(String.valueOf(desLatLng.longitude));
+                            latitudeEdit.setText(String.valueOf(desLatLng.latitude));
+                        } else {
+                            Toast.makeText(AddPictureActivity.this, "该图片无经纬度信息，将使用该地点经纬度, ",
+                                    Toast.LENGTH_SHORT).show();
+                            longitudeEdit.setText(String.valueOf(MyPlaceActivity.getPlaceLatLng().longitude) + "");
+                            latitudeEdit.setText(String.valueOf(MyPlaceActivity.getPlaceLatLng().latitude + ""));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
             case 2:
                 if (data != null) {
                     pictureUrl = HandleImagePath.handleImagePath(data);
+                    Log.e("AddPictureActivity", "pictureUrl--" + pictureUrl);
                     photoIsChoosed = true;
                     Glide.with(this).load(pictureUrl)
                             .bitmapTransform(new BlurTransformation(this)).into(imageView);
+                    try {
+                        ExifInterface exifInterface = new ExifInterface(pictureUrl);
+                        String pictureLongitude = exifInterface
+                                .getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                        String pictureLatitude = exifInterface
+                                .getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                        String pictureLongitudeRef = exifInterface.getAttribute(
+                                ExifInterface.TAG_GPS_LONGITUDE_REF);
+                        String pictureLatitudeRef = exifInterface.getAttribute(
+                                ExifInterface.TAG_GPS_LATITUDE_REF);
+                        if (pictureLatitude != null && pictureLongitude != null) {
+                            CoordinateConverter converter  = new CoordinateConverter();//转化坐标
+                            converter.from(CoordinateConverter.CoordType.GPS);
+                            converter.coord(new LatLng(
+                                    convertRationalLatLonToDouble(pictureLatitude, pictureLatitudeRef),
+                                    convertRationalLatLonToDouble(pictureLongitude, pictureLongitudeRef)));
+                            LatLng desLatLng = converter.convert();
+                            longitudeEdit.setText(String.valueOf(desLatLng.longitude));
+                            latitudeEdit.setText(String.valueOf(desLatLng.latitude));
+                        } else {
+                            Toast.makeText(AddPictureActivity.this, "该图片无经纬度信息，将使用该地点经纬度, ",
+                                    Toast.LENGTH_SHORT).show();
+                            longitudeEdit.setText(String.valueOf(MyPlaceActivity.getPlaceLatLng().longitude) + "");
+                            latitudeEdit.setText(String.valueOf(MyPlaceActivity.getPlaceLatLng().latitude + ""));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             default:
         }
+    }
+
+    private double convertRationalLatLonToDouble(
+            String rationalString, String ref) {
+
+        String[] parts = rationalString.split(",");
+
+        String[] pair;
+        pair = parts[0].split("/");
+        double degrees = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[1].split("/");
+        double minutes = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        pair = parts[2].split("/");
+        double seconds = Double.parseDouble(pair[0].trim())
+                / Double.parseDouble(pair[1].trim());
+
+        double result = degrees + (minutes / 60.0) + (seconds / 3600.0);
+        if ((ref.equals("S") || ref.equals("W"))) {
+            return  -result;
+        }
+        return  result;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -145,6 +305,7 @@ public class AddPictureActivity extends AppCompatActivity {
         addPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DialogUtil.showProgressDialog(AddPictureActivity.this, "正在上传...");
                 if (photoIsChoosed && timeIsChoosed) {
                     paraMap.put("title", titleEdit.getText().toString());
                     paraMap.put("time_str", timeStrEdit.getText().toString());
@@ -158,7 +319,15 @@ public class AddPictureActivity extends AppCompatActivity {
                     HttpUtil.postPicture(paraMap, pictureUrl, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
-
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DialogUtil.closeProgressDialog();
+                                    Toast.makeText(AddPictureActivity.this, "上传失败!",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            finish();
                         }
 
                         @Override
@@ -166,18 +335,19 @@ public class AddPictureActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(AddPictureActivity.this, "Post completed!",
+                                    Toast.makeText(AddPictureActivity.this, "上传成功!",
                                             Toast.LENGTH_SHORT).show();
-                                    finish();
                                 }
                             });
+                            DialogUtil.closeProgressDialog();
+                            finish();
                         }
                     });
                 } else if (!photoIsChoosed){
-                    Toast.makeText(AddPictureActivity.this, "Please choose a photo first",
+                    Toast.makeText(AddPictureActivity.this, "请先选择一张图片",
                             Toast.LENGTH_SHORT).show();
                 } else if (!timeIsChoosed) {
-                    Toast.makeText(AddPictureActivity.this, "Please choose a time first",
+                    Toast.makeText(AddPictureActivity.this, "请先选择日期",
                             Toast.LENGTH_SHORT).show();
                 }
             }

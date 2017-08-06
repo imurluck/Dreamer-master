@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
 import com.example.adapter.MyPlaceRecyclerAdapter;
 import com.example.interfaces.OnItemLongClickListener;
 import com.example.utils.HttpUtil;
@@ -47,7 +49,7 @@ public class MyPlaceActivity extends AppCompatActivity {
 
     private static  SwipeRefreshLayout swipeRefreshLayout;
 
-    private Place concretePlace;
+    private static Place concretePlace;
 
     /**private Handler handler = new Handler() {
         public void handleMessage(Message message) {
@@ -79,6 +81,17 @@ public class MyPlaceActivity extends AppCompatActivity {
         recyclerView.setVisibility(View.GONE);
         refreshPictures();
         addPicture();
+    }
+
+    @Nullable
+    public static LatLng getPlaceLatLng() {
+        if (concretePlace != null) {
+            return new LatLng(concretePlace.getLatitude(), concretePlace.getLongitude());
+        } else {
+            Toast.makeText(MyApplication.getContext(), "无法获取到地点经纬度信息",
+                    Toast.LENGTH_SHORT);
+        }
+        return null;
     }
 
     public void refreshPictures() {
@@ -154,7 +167,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         Toast.makeText(MyPlaceActivity.this,
-                                                "Delete completed!", Toast.LENGTH_SHORT).show();
+                                                "删除成功!", Toast.LENGTH_SHORT).show();
 
                                     }
                                 });
@@ -176,10 +189,15 @@ public class MyPlaceActivity extends AppCompatActivity {
         addPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyPlaceActivity.this, AddPictureActivity.class);
-                intent.putExtra("placeName", placeName);
-                intent.putExtra("placeId", placeId);
-                startActivity(intent);
+                if (concretePlace != null) {
+                    Intent intent = new Intent(MyPlaceActivity.this, AddPictureActivity.class);
+                    intent.putExtra("placeName", placeName);
+                    intent.putExtra("placeId", placeId);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MyPlaceActivity.this, "当前地点未获取到，" +
+                            "无法添加照片", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -88,7 +88,7 @@
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="地点详细描述（暂时可以不填）"
+            android:hint="地点详细描述"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -102,7 +102,7 @@
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="详细描述网址（可以不填）"
+            android:hint="详细描述网址"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -116,7 +116,7 @@
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="相似地点个数（可以不填）"
+            android:hint="相似地点个数"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -130,7 +130,7 @@
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="经度（暂时可以不填）"
+            android:hint="经度"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -144,7 +144,7 @@
             android:layout_marginRight="30dp"
             android:background="@drawable/edite_text"
             android:gravity="center_vertical"
-            android:hint="纬度（暂时可以不填）"
+            android:hint="纬度"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
             android:textCursorDrawable="@drawable/edit_cursor" />
@@ -174,23 +174,35 @@
             <Button
                 android:id="@+id/picture_modify_choose_photo"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button"
-                android:text="选择相片（必选）"
+                android:text="选择相片"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
 
             <Button
-                android:id="@+id/picture_modify_choose_time"
+                android:id="@+id/picture_modify_camera"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/button"
-                android:text="选择日期（必选）"
+                android:text="选择相片"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"/>
+
+            <Button
+                android:id="@+id/picture_modify_choose_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/button"
+                android:text="选择日期"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />
         </LinearLayout>

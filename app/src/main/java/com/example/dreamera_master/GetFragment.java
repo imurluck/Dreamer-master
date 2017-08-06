@@ -62,17 +62,21 @@ public class GetFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_PLACES:
-                    adapter = new GetFragmentListAdapter(placesList);
-                    placesListView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    if (swipeRefresh.isRefreshing()) {
+                        swipeRefresh.setRefreshing(false);
+                    }
                     break;
                 case DELETE_PLACE:
                     adapter.notifyDataSetChanged();
                     swipeRefresh.setRefreshing(false);
                     break;
-                case REFRESH_PLACE:
+                /**case REFRESH_PLACE:
+                    placesList.remove(0);
                     adapter.notifyDataSetChanged();
+                    Log.e("GetFragment", "hander refreshPlace");
                     swipeRefresh.setRefreshing(false);
-                    break;
+                    break;*/
                 default:
             }
         }
@@ -91,18 +95,22 @@ public class GetFragment extends Fragment {
         nullText = (TextView) view.findViewById(R.id.null_text);
         swipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.get_fragment_place_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        placesListView.setEmptyView(nullText);
+        adapter = new GetFragmentListAdapter(placesList);
+        placesListView.setAdapter(adapter);
+        getPlaces();
+        //refreshPlace();
+        handleListView();
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshPlace();
+                //refreshPlace();
+                getPlaces();
             }
         });
-        placesListView.setEmptyView(nullText);
-        getPlaces();
-        handleListView();
         return view;
     }
-    private void refreshPlace() {
+    /**private void refreshPlace() {
                 HttpUtil.getPlaces(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
@@ -110,7 +118,7 @@ public class GetFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), "refresh failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "无法获取到数据", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -118,7 +126,7 @@ public class GetFragment extends Fragment {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String jsonData = response.body().string();
-                        placesList = ParseJSON.handleJSONForPlaces(jsonData);
+                        Log.e("GetFrament", jsonData);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -128,11 +136,15 @@ public class GetFragment extends Fragment {
                         placesList.clear();
                         placesList.addAll(ParseJSON.handleJSONForPlaces(jsonData));
                         Message message = new Message();
+                        for (int i = 0; i < placesList.size(); i++) {
+                            Log.e("GetFragment", placesList.get(i));
+                            placesList.remove(i);
+                        }
                         message.what = REFRESH_PLACE;
                         handler.sendMessage(message);
                     }
                 });
-    }
+    }*/
     private void getPlaces() {
         HttpUtil.getPlaces(new Callback() {
             @Override
@@ -143,7 +155,8 @@ public class GetFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String jsonData = response.body().string();
-                placesList = ParseJSON.handleJSONForPlaces(jsonData);
+                placesList.clear();
+                placesList.addAll(ParseJSON.handleJSONForPlaces(jsonData));
                 Message message = new Message();
                 message.what = GET_PLACES;
                 handler.sendMessage(message);
@@ -177,7 +190,13 @@ public class GetFragment extends Fragment {
                                 HttpUtil.deletePlace(placeId, new Callback() {
                                     @Override
                                     public void onFailure(Call call, IOException e) {
-
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getContext(), "删除失败",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     }
 
                                     @Override

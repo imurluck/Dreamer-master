@@ -53,7 +53,7 @@ public class MarkerPopupWindowView extends PopupWindow {
 
     private BaiduMap mBaiduMap;
 
-    private Activity activity;
+    private static Activity activity;
 
     public static View popupView;
 
@@ -239,16 +239,26 @@ public class MarkerPopupWindowView extends PopupWindow {
             HttpUtil.putPicture(pictureId, paraMap, null, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Toast.makeText(MyApplication.getContext(), "上传失败",
-                            Toast.LENGTH_SHORT).show();
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MyApplication.getContext(), "上传失败",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseContent = response.body().string();
                     Log.e(TAG, "responseContent : " + responseContent);
-                    Toast.makeText(MyApplication.getContext(), "上传成功",
-                            Toast.LENGTH_SHORT).show();
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MyApplication.getContext(), "上传成功",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         } else {
