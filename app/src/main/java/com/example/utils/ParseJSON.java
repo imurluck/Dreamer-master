@@ -28,10 +28,10 @@ public class ParseJSON {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 places.add(jsonObject.getString("name"));
                 Log.d("ParseJSON", jsonObject.getString("name"));
-                Log.d("ParseJSON", jsonObject.getString("id"));
+                Log.d("ParseJSON", jsonObject.getString("pk"));
                 SharedPreferences.Editor editor = MyApplication.getContext().getSharedPreferences("places",
                         Context.MODE_PRIVATE).edit();
-                editor.putString(jsonObject.getString("name"), String.valueOf(jsonObject.getInt("id")));
+                editor.putString(jsonObject.getString("name"), String.valueOf(jsonObject.getInt("pk")));
                 editor.apply();
             }
         } catch (Exception e) {

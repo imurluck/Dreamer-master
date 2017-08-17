@@ -68,7 +68,7 @@ public class BMapControlUtil {
                         JSONObject pictureItem = crossPictures.getJSONObject(i);
                         String pictureTitie = pictureItem.getString("title");
                         String pictureUrl = pictureItem.getString("picture");
-                        String pictureId = pictureItem.getString("id");
+                        String pictureId = pictureItem.getString("pk");
                         String placeId = pictureItem.getString("place");
                         String datetime = pictureItem.getString("datetime");
                         String timeStr = pictureItem.getString("time_str");

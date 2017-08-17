@@ -107,7 +107,13 @@ public class MyPlaceActivity extends AppCompatActivity {
         HttpUtil.getConCretePlace(placeId, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MyPlaceActivity.this, "加载图片失败",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -159,6 +165,13 @@ public class MyPlaceActivity extends AppCompatActivity {
                         HttpUtil.deletePicture(pictureId, new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(MyPlaceActivity.this, "网络原因,删除失败",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
 
                             @Override

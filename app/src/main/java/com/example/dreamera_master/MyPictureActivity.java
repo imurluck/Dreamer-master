@@ -97,7 +97,7 @@ public class MyPictureActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MyApplication.getContext(), "get picture failed",
+                        Toast.makeText(MyApplication.getContext(), "获取图片信息失败",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class MyPicture implements Serializable {
 
-    @SerializedName("id")
+    @SerializedName("pk")
     private int pictureId;
 
     private String title;

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Place {
 
-    @SerializedName("id")
+    @SerializedName("pk")
     private int placeId;
 
     @SerializedName("cross_pictures")

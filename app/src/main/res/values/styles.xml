@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorLightBlue</item>
+        <item name="colorPrimaryDark">@color/colorLightBlue</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -25,5 +25,12 @@
     <style name="popup_recommnd_photo_anim" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/pop_vertical</item>
         <item name="android:windowExitAnimation">@anim/exit_vertical</item>
+    </style>
+
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@android:color/holo_blue_light</item>
+        <item name="colorAccent">@android:color/holo_blue_light</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@android:color/holo_blue_light</item>
     </style>
 </resources>

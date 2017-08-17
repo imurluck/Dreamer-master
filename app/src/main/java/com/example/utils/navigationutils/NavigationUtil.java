@@ -191,13 +191,13 @@ public class NavigationUtil {
             }
 
             public void initSuccess() {
-                Toast.makeText(activity, "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(activity, "百度导航引擎初始化成功", Toast.LENGTH_SHORT).show();
                 hasInitSuccess = true;
                 initSetting();
             }
 
             public void initStart() {
-                Toast.makeText(activity, "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(activity, "百度导航引擎初始化开始", Toast.LENGTH_SHORT).show();
             }
 
             public void initFailed() {

@@ -26,6 +26,7 @@ import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bumptech.glide.Glide;
 import com.example.utils.BlurTransformation;
 import com.example.utils.DialogUtil;
+import com.example.utils.GreyPicTransform;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
 import com.example.utils.MyPicture;
@@ -60,7 +61,7 @@ public class PictureModifyActivity extends AppCompatActivity {
 
     private EditText latitudeEdit;
 
-    private EditText altitudeEdit;
+    //private EditText altitudeEdit;
 
     private Button choosePhoto;
 
@@ -124,7 +125,7 @@ public class PictureModifyActivity extends AppCompatActivity {
         likeCountEdit = (EditText) findViewById(R.id.picture_modify_like_count);
         longitudeEdit = (EditText) findViewById(R.id.picture_modify_longtitude);
         latitudeEdit = (EditText) findViewById(R.id.picture_modify_latitude);
-        altitudeEdit = (EditText) findViewById(R.id.picture_modify_altitude);
+        //altitudeEdit = (EditText) findViewById(R.id.picture_modify_altitude);
         choosePhoto = (Button) findViewById(R.id.picture_modify_choose_photo);
         chooseTime = (Button) findViewById(R.id.picture_modify_choose_time);
         modify = (Button) findViewById(R.id.picture_modify_modify);
@@ -157,7 +158,7 @@ public class PictureModifyActivity extends AppCompatActivity {
          likeCountEdit.setText(myPicture.getLike_count() + "");
          longitudeEdit.setText(String.valueOf(myPicture.getLongitude()) + "");
          latitudeEdit.setText(String.valueOf(myPicture.getLatitude()) + "");
-         altitudeEdit.setText(String.valueOf(myPicture.getAltitude()) + "");
+         //altitudeEdit.setText(String.valueOf(myPicture.getAltitude()) + "");
          chooseTime.setText(String.valueOf(myPicture.getDatetime().substring(0, 10)) + "");
      }
 
@@ -258,9 +259,7 @@ public class PictureModifyActivity extends AppCompatActivity {
                     pictureUrl = imageUri.getPath();
                     Log.e("AddPictureActivity", imageUri.getPath());
                     pictureIsChoosed = true;
-                    Glide.with(this).load(pictureUrl)
-                            .bitmapTransform(new BlurTransformation(this))
-                            .into(imageView);
+                    showImage();
                     try {
                         ExifInterface exifInterface = new ExifInterface(pictureUrl);
                         String pictureLongitude = exifInterface
@@ -331,7 +330,7 @@ public class PictureModifyActivity extends AppCompatActivity {
                 paraMap.put("like_count", likeCountEdit.getText().toString());
                 paraMap.put("longitude", longitudeEdit.getText().toString());
                 paraMap.put("latitude", latitudeEdit.getText().toString());
-                paraMap.put("altitude", altitudeEdit.getText().toString());
+                //paraMap.put("altitude", altitudeEdit.getText().toString());
                 paraMap.put("place", String.valueOf(myPicture.getPlaceId()));
                 paraMap.put("datetime", chooseTime.getText().toString() + "T01:01:00Z");
                 if (pictureIsChoosed) {
@@ -401,7 +400,7 @@ public class PictureModifyActivity extends AppCompatActivity {
     }
     private void showImage() {
          Glide.with(this).load(pictureUrl)
-                 .bitmapTransform(new BlurTransformation(this))
+                 .bitmapTransform(new GreyPicTransform(this))
                  .into(imageView);
      }
 }

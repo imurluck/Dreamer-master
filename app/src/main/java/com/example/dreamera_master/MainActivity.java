@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout.Tab deleteTab;
 
     private TabLayout.Tab getTab;
+
+    private long mExitTime = 0;
 
 
     public static NavigationUtil mNavigationUtil;
@@ -230,10 +233,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.login_out:
+            /**case R.id.login_out:
                 Toast.makeText(this, "Login out----uncompelete", Toast
                 .LENGTH_SHORT).show();
-                break;
+                break;*/
             case R.id.exit_application:
                 /**Toast.makeText(this, "Exit application----uncompelete", Toast
                 .LENGTH_SHORT).show();*/
@@ -270,4 +273,19 @@ public class MainActivity extends AppCompatActivity {
          viewPager.setAdapter(adapter);
          tabLayout.setupWithViewPager(viewPager);
      }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Toast.makeText(MainActivity.this, "再按一次退出程序",
+                        Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

@@ -149,7 +149,16 @@ public class GetFragment extends Fragment {
         HttpUtil.getPlaces(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (swipeRefresh.isRefreshing()) {
+                            swipeRefresh.setRefreshing(false);
+                        }
+                        Toast.makeText(getContext(), "获取地点失败",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override

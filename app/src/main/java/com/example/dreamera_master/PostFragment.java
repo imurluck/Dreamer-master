@@ -298,7 +298,13 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                 HttpUtil.postPlace(paraMap, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                closeProgressDialog();
+                                Toast.makeText(getContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                     @Override
@@ -371,8 +377,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                 navigateTo(location);
                 Log.d("PostFragment", "have been in here");
             } else {
-                Toast.makeText(getActivity(), "当前无法定位",
-                        Toast.LENGTH_SHORT).show();
+                /**Toast.makeText(getActivity(), "当前无法定位",
+                        Toast.LENGTH_SHORT).show();*/
             }
         }
 
@@ -475,7 +481,7 @@ public class PostFragment extends Fragment implements View.OnClickListener {
     private void showProgressDialog() {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("upLoading...");
+            progressDialog.setMessage("上传中...");
             progressDialog.setCancelable(false);
         }
         progressDialog.show();

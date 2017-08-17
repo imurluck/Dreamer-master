@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bumptech.glide.Glide;
-import com.example.utils.BlurTransformation;
 import com.example.utils.DialogUtil;
+import com.example.utils.GreyPicTransform;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
 import com.example.view.RecommendPhotoPopupWindow;
@@ -54,7 +54,7 @@ public class AddPictureActivity extends AppCompatActivity {
 
     private EditText latitudeEdit;
 
-    private EditText altitudeEdit;
+    //private EditText altitudeEdit;
 
     private Button choosePhoto;
 
@@ -115,7 +115,7 @@ public class AddPictureActivity extends AppCompatActivity {
         likeCountEdit = (EditText) findViewById(R.id.add_picture_like_count);
         longitudeEdit = (EditText) findViewById(R.id.add_picture_longtitude);
         latitudeEdit = (EditText) findViewById(R.id.add_picture_latitude);
-        altitudeEdit = (EditText) findViewById(R.id.add_picture_altitude);
+        //altitudeEdit = (EditText) findViewById(R.id.add_picture_altitude);
         choosePhoto = (Button) findViewById(R.id.add_picture_choose_photo);
         chooseTime = (Button) findViewById(R.id.add_picture_choose_time);
         cancel = (Button) findViewById(R.id.add_picture_cancel);
@@ -161,7 +161,7 @@ public class AddPictureActivity extends AppCompatActivity {
 
     public void showPicture(String pictureUrl) {
         Glide.with(this).load(pictureUrl)
-                .bitmapTransform(new BlurTransformation(this)).into(imageView);
+                .bitmapTransform(new GreyPicTransform(this)).into(imageView);
         this.photoIsChoosed = true;
     }
 
@@ -182,9 +182,7 @@ public class AddPictureActivity extends AppCompatActivity {
                     pictureUrl = imageUri.getPath();
                     Log.e("AddPictureActivity", imageUri.getPath());
                     photoIsChoosed = true;
-                    Glide.with(this).load(pictureUrl)
-                            .bitmapTransform(new BlurTransformation(this))
-                            .into(imageView);
+                    showPicture(pictureUrl);
                     try {
                         ExifInterface exifInterface = new ExifInterface(pictureUrl);
                         String pictureLongitude = exifInterface
@@ -220,8 +218,7 @@ public class AddPictureActivity extends AppCompatActivity {
                     pictureUrl = HandleImagePath.handleImagePath(data);
                     Log.e("AddPictureActivity", "pictureUrl--" + pictureUrl);
                     photoIsChoosed = true;
-                    Glide.with(this).load(pictureUrl)
-                            .bitmapTransform(new BlurTransformation(this)).into(imageView);
+                    showPicture(pictureUrl);
                     try {
                         ExifInterface exifInterface = new ExifInterface(pictureUrl);
                         String pictureLongitude = exifInterface
@@ -314,7 +311,7 @@ public class AddPictureActivity extends AppCompatActivity {
                     paraMap.put("like_count", likeCountEdit.getText().toString());
                     paraMap.put("longitude", longitudeEdit.getText().toString());
                     paraMap.put("latitude", latitudeEdit.getText().toString());
-                    paraMap.put("altitude", altitudeEdit.getText().toString());
+                    //paraMap.put("altitude", altitudeEdit.getText().toString());
                     paraMap.put("place", placeId);
                     HttpUtil.postPicture(paraMap, pictureUrl, new Callback() {
                         @Override
