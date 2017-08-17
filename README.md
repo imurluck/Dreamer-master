@@ -1,6 +1,5 @@
 # Dreamer-master
 ## <a href="/app/app-release.apk">下载安装包</a>
-## [下载安装包](./app/app-release.apk)
 ## 应用展示
 图片 | 说明
 ---- | ----
