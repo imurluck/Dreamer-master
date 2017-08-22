@@ -23,9 +23,16 @@ public class HttpUtil {
 
     private static final String BASE_PICTURE = "http://www.dreamera.net:8080/cross/picture/";
 
+    private static final String BASE_PLACE_SEARCH = "http://59.110.68.108:8080/cross/place/?name=";
+
     public static OkHttpClient okHttpClient = new OkHttpClient();
     public static void getPlaces(okhttp3.Callback callback) {
         Request request = new Request.Builder().url(BASE_PLACE).build();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
+
+    public static void searchPlaces(String name, okhttp3.Callback callback) {
+        Request request = new Request.Builder().url(BASE_PLACE_SEARCH + name).build();
         okHttpClient.newCall(request).enqueue(callback);
     }
 

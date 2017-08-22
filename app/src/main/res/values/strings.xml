@@ -20,7 +20,6 @@
     <string name="action_clear_map">Clear Old Map</string>
 
 
-
     <string name="sdk_name">Baidu Navigation SDK Demo</string>
     <string-array name="sdkapi_items">
         <item>关键字搜索</item>

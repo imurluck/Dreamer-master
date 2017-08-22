@@ -53,22 +53,20 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity
-            android:name=".MyPlaceActivity" />
-        <activity
-            android:name=".BNDemoGuideActivity" />
+        <activity android:name=".MyPlaceActivity" />
+        <activity android:name=".BNDemoGuideActivity" />
         <activity
             android:name=".CameraActivity"
-            android:theme="@style/MyPictureActivityTheme"/>
+            android:theme="@style/MyPictureActivityTheme" />
         <activity
             android:name=".FusionActivity"
-            android:theme="@style/MyPictureActivityTheme"/>
+            android:theme="@style/MyPictureActivityTheme" />
         <activity
             android:name=".FilterActivity"
-            android:theme="@style/MyPictureActivityTheme"/>
+            android:theme="@style/MyPictureActivityTheme" />
         <activity
             android:name=".AddPictureActivity"
-            android:theme="@style/MyPictureActivityTheme"/>
+            android:theme="@style/MyPictureActivityTheme" />
         <activity
             android:name=".MyPictureActivity"
             android:theme="@style/MyPictureActivityTheme" />
@@ -77,8 +75,7 @@
             android:theme="@style/MyPictureActivityTheme" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/MyPictureActivityTheme">
-        </activity>
+            android:theme="@style/MyPictureActivityTheme"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -89,6 +86,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".SearchPlaceActivity"></activity>
     </application>
 
 </manifest>

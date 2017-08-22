@@ -16,7 +16,8 @@ public class City {
 
     private String code;
 
-    private int province;
+    @SerializedName("province")
+    private Province province;
 
     public int getCityId() {
         return cityId;
@@ -42,11 +43,36 @@ public class City {
         this.code = code;
     }
 
-    public int getProvince() {
+    public Province getProvince() {
         return province;
     }
 
-    public void setProvince(int province) {
+    public void setProvince(Province province) {
         this.province = province;
+    }
+
+    public class Province {
+
+        @SerializedName("pk")
+        private int provinceId;
+
+        @SerializedName("name")
+        private String provinceName;
+
+        public int getProvinceId() {
+            return provinceId;
+        }
+
+        public void setProvinceId(int provinceId) {
+            this.provinceId = provinceId;
+        }
+
+        public String getProvinceName() {
+            return provinceName;
+        }
+
+        public void setProvinceName(String provinceName) {
+            this.provinceName = provinceName;
+        }
     }
 }

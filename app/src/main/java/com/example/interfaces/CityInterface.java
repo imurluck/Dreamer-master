@@ -5,4 +5,5 @@ package com.example.interfaces;
  */
 
 public interface CityInterface {
+    String getCityName();
 }

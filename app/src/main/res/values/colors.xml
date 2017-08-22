@@ -6,6 +6,7 @@
     <color name="marker_text">#009640</color>
     <color name="colorBanner">#FFFFFF</color>
     <color name="colorLightBlue">#21a0ed</color>
+    <color name="colorTextDark">#060606</color>
 
     <!-- add on 2016-06-14 by 10405 -->
     <color name="btn_default_light_normal">#00000000</color>

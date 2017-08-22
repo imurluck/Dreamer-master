@@ -1,6 +1,7 @@
 package com.example.dreamera_master;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView userName;
 
     private TextView email;
+
+    private TextView searchTv;
 
     private PostFragment postFragment;
 
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationUtil = new NavigationUtil(this);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        searchTv = (TextView) findViewById(R.id.main_search_tv);
         //mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -113,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
         //initViewPager();//初始化ViewPager
         applyPermission();
         Log.e("MainActivtiy", "MainActivtiy excute");
+        setSearchTvListener();
+    }
+
+    private void setSearchTvListener() {
+        searchTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchPlaceActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void applyPermission() {

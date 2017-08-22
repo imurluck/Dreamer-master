@@ -21,14 +21,31 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="管理员"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:orientation="horizontal"
+                android:background="@drawable/search_layout">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_search"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="2dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/main_search_tv"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:textColor="#dddddd"
+                    android:text="搜索地点"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
         <fragment
