@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.dreamera_master.MyApplication;
 import com.example.dreamera_master.R;
+import com.example.view.RecommendPhotoPopupWindow;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yourgod on 2017/8/2.
@@ -26,13 +26,13 @@ public class RecommendPhotoAdapter extends RecyclerView
 
     private String TAG = "RecommendPhotoAdapter";
 
-    private List<Map<String, Object>> photoList;
+    private List<RecommendPhotoPopupWindow.PhotoPoint> photoList;
 
     private Context context;
 
     private OnItemClickListener onItemClickListener;
 
-    public RecommendPhotoAdapter(Context context, List<Map<String, Object>> photoList) {
+    public RecommendPhotoAdapter(Context context, List<RecommendPhotoPopupWindow.PhotoPoint> photoList) {
         this.photoList = photoList;
         this.context = context;
     }
@@ -71,14 +71,14 @@ public class RecommendPhotoAdapter extends RecyclerView
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mView.setTag(position);
-        Map<String, Object> map = photoList.get(position);
-        Glide.with(context).load(String.valueOf(map.get("photoUrl")))
+        RecommendPhotoPopupWindow.PhotoPoint point = photoList.get(position);
+        Glide.with(context).load(String.valueOf(point.photoUrl))
                 .into(holder.imageView);
-        Log.e(TAG, (String) map.get("photoUrl"));
+        Log.e(TAG,  point.photoUrl);
         //holder.imageView.setImageBitmap(BitmapFactory.decodeFile((String) map.get("photoUrl")));
         holder.tagImageView.setVisibility(View.GONE);
         double finalDistance;
-        long distance = Math.round((double) map.get("photoDistance"));
+        long distance = Math.round(point.photoDistance);
         Log.e(TAG, "start distance --" + distance);
         if ((distance - 1000) > 0) {
             distance = (long) distance / 100;

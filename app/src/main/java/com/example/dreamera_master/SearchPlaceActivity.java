@@ -248,7 +248,8 @@ public class SearchPlaceActivity extends AppCompatActivity {
                 historyAdapter.notifyDataSetChanged();
                 Intent intent = new Intent(SearchPlaceActivity.this, MyPlaceActivity.class);
                 intent.putExtra("placeName", place.getName());
-                intent.putExtra("placeId", place.getPlaceId());
+                intent.putExtra("placeId", String.valueOf(place.getPlaceId()));
+                Log.e(TAG, "onItemClick: placeId--" + place.getPlaceId());
                 startActivity(intent);
             }
         });

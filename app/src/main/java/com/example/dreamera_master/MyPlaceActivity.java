@@ -2,7 +2,6 @@ package com.example.dreamera_master;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -69,12 +68,12 @@ public class MyPlaceActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         Intent intent = getIntent();
         placeName = intent.getStringExtra("placeName");
+        placeId = intent.getStringExtra("placeId");
         myPlaceToolbar.setTitle("");
         titleText.setText(placeName);
         setSupportActionBar(myPlaceToolbar);
-        Log.d("MyPlaceActivity", placeName);
-        placeId = getPlaceIdFromPlaceName(placeName);
-        Log.d("MyPlaceActivity", placeId);
+        Log.e("MyPlaceActivity", placeName);
+        Log.e("MyPlaceActivity", placeId);
         recyclerView = (RecyclerView) findViewById(R.id.my_place_recycler);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -194,10 +193,10 @@ public class MyPlaceActivity extends AppCompatActivity {
         }).create().show();
     }
 
-    private String getPlaceIdFromPlaceName(String placeName) {
+    /**private String getPlaceIdFromPlaceName(String placeName) {
         SharedPreferences prefs = getSharedPreferences("places", MODE_PRIVATE);
         return prefs.getString(placeName, "");
-    }
+    }*/
     private void addPicture() {
         addPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override

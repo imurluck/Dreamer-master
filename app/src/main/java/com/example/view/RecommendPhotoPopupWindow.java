@@ -23,9 +23,7 @@ import com.example.dreamera_master.R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yourgod on 2017/8/2.
@@ -44,7 +42,7 @@ public class RecommendPhotoPopupWindow extends PopupWindow {
     private double currentLongitude = MyPlaceActivity.getPlaceLatLng().longitude;
     private double currentLatitude = MyPlaceActivity.getPlaceLatLng().latitude;
 
-    private List<Map<String, Object>> photoList = new ArrayList<Map<String, Object>>();
+    private List<PhotoPoint> photoList = new ArrayList<PhotoPoint>();
 
     private Context context;
 
@@ -104,9 +102,9 @@ public class RecommendPhotoPopupWindow extends PopupWindow {
         }
         view.findViewById(R.id.recommend_photo_item_selected_tag)
                 .setVisibility(View.VISIBLE);
-        Map map = photoList.get(position);
-        photoUrl = (String) map.get("photoUrl");
-        photoLatLng = (LatLng) map.get("photoLatLng");
+        PhotoPoint point = photoList.get(position);
+        photoUrl = point.photoUrl;
+        photoLatLng = point.photoLatLng;
         recommendPhotoImageButton.setVisibility(View.VISIBLE);
         recommendPhotoImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,8 +131,8 @@ public class RecommendPhotoPopupWindow extends PopupWindow {
                 byte[] data = cursor.getBlob(cursor.getColumnIndex(MediaStore
                         .Images.Media.DATA));
                 String fileName = new String(data, 0, data.length - 1);
-                Map map = new HashMap();
-                map.put("photoUrl", fileName);
+                PhotoPoint point = new PhotoPoint();
+                point.photoUrl = fileName;
                 double longitude = cursor.getDouble(cursor.getColumnIndex(MediaStore
                         .Images.Media.LONGITUDE));
                 double latitude = cursor.getDouble(cursor.getColumnIndex(MediaStore
@@ -149,24 +147,24 @@ public class RecommendPhotoPopupWindow extends PopupWindow {
                     Log.e(TAG, "longitude--" + desLatLng.longitude + "current--" + currentLongitude);
                     Log.e(TAG, "latitude--" + desLatLng.latitude + "current--" + currentLatitude);
                     Log.e(TAG, "distance= " + String.valueOf(distance));
-                    map.put("photoDistance", distance);
-                    map.put("photoLatLng", desLatLng);
-                    photoList.add(map);
+                    point.photoDistance = Math.round(distance);
+                    point.photoLatLng = desLatLng;
+                    photoList.add(point);
                 }
             }
         }
     }
 
-    public class PhotoDistanceComparator implements Comparator<Map<String, Object>> {
+    public class PhotoDistanceComparator implements Comparator<PhotoPoint> {
 
         @Override
-        public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-            if (((double) o1.get("photoDistance") - (double) o2.get("photoDistance")) == 0) {
+        public int compare(PhotoPoint o1, PhotoPoint o2) {
+            if (o1.photoDistance == o2.photoDistance) {
                 return 0;
-            } else if (((double) o1.get("photoDistance") - (double) o2.get("photoDistance")) < 0) {
+            } else if (o1.photoDistance < o2.photoDistance) {
                 return -1;
             } else {
-                return 0;
+                return 1;
             }
         }
     }
@@ -188,5 +186,12 @@ public class RecommendPhotoPopupWindow extends PopupWindow {
         s = s * EARTH_RADIUS;
         s = Math.round(s * 10000) / 10000;
         return s;
+    }
+
+    public class PhotoPoint {
+        public LatLng photoLatLng;
+        public String photoUrl;
+        public long photoDistance;
+        public PhotoPoint() {};
     }
 }
