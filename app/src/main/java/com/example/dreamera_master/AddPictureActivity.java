@@ -24,7 +24,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bumptech.glide.Glide;
 import com.example.utils.DialogUtil;
-import com.example.utils.GreyPicTransform;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
 import com.example.view.RecommendPhotoPopupWindow;
@@ -39,6 +38,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class AddPictureActivity extends AppCompatActivity {
+
+    private String TAG = "AddPictureActivity";
 
     private EditText titleEdit;
 
@@ -161,7 +162,9 @@ public class AddPictureActivity extends AppCompatActivity {
 
     public void showPicture(String pictureUrl) {
         Glide.with(this).load(pictureUrl)
-                .bitmapTransform(new GreyPicTransform(this)).into(imageView);
+                //.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                //.bitmapTransform(new GreyPicTransform(this))
+                .into(imageView);
         this.photoIsChoosed = true;
     }
 
@@ -336,6 +339,7 @@ public class AddPictureActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
+                            Log.e(TAG, "onResponse: " + response.body().string());
                             DialogUtil.closeProgressDialog();
                             finish();
                         }
