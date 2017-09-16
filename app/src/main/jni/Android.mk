@@ -23,6 +23,7 @@ LOCAL_SRC_FILES += Line.cpp
 LOCAL_SRC_FILES += MinHeap.cpp
 LOCAL_SRC_FILES += mycanny.cpp
 LOCAL_SRC_FILES += myhough.cpp
+LOCAL_SRC_FILES += com_example_utils_PictureTransform.cpp
 
 #LOCAL_LDLIBS +=  -lm -llog
 LOCAL_LDLIBS += -llog

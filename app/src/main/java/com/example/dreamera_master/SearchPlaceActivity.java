@@ -223,6 +223,9 @@ public class SearchPlaceActivity extends AppCompatActivity {
                 SearchHistoryUtils.getInstance().deleteSearchHistory(name);
                 historyList.remove(position);
                 historyAdapter.notifyDataSetChanged();
+                if (historyList.size() <= 0) {
+                    showViews(NO_VIEWS);
+                }
             }
 
             @Override

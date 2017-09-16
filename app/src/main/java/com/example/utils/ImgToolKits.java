@@ -60,15 +60,19 @@ public class ImgToolKits {
      */
     public static Bitmap initBorderPic(Bitmap bitmap, float width, float height, boolean flag) {
 
-        int bitmapWidth = bitmap.getWidth();
-        int bitmapHeight = bitmap.getHeight();
-        Bitmap result;
-        if(bitmapWidth >= bitmapHeight) {
-            result = initBorderPic1(bitmap, width, height, flag);
+        if (bitmap != null) {
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+            Bitmap result;
+            if (bitmapWidth >= bitmapHeight) {
+                result = initBorderPic1(bitmap, width, height, flag);
+            } else {
+                result = initBorderPic2(bitmap, width, height, flag);
+            }
+            return result;
         } else {
-            result = initBorderPic2(bitmap, width, height, flag);
+            return null;
         }
-        return result;
     }
 
 

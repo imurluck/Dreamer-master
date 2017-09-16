@@ -188,12 +188,18 @@ public class MarkerPopupWindowView extends PopupWindow {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int[] startingLocation = new int[2];
-                floatingActionButton.getLocationOnScreen(startingLocation);
-                startingLocation[0] += floatingActionButton.getWidth() / 2;
+                Bitmap picFromFile = AsyncGetDataUtil.getPicFromFile(pictureId);
+                if (picFromFile != null) {
+                    int[] startingLocation = new int[2];
+                    floatingActionButton.getLocationOnScreen(startingLocation);
+                    startingLocation[0] += floatingActionButton.getWidth() / 2;
 
-                CameraActivity.startCameraFromLocation(startingLocation, activity, pictureId, pictureUrl);
-                activity.overridePendingTransition(0, 0);
+                    CameraActivity.startCameraFromLocation(startingLocation, activity, pictureId, pictureUrl);
+                    activity.overridePendingTransition(0, 0);
+                } else {
+                    Toast.makeText(activity, "此图片未下载成功,无法进行拍照功能",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
         lastView = view;

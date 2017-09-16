@@ -19,7 +19,7 @@ public class DialogUtil {
             progressDialog = new ProgressDialog(context);
             progressDialog.setMessage(message);
             progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+            progressDialog.show();
     }
 
     public static void closeProgressDialog() {

@@ -1,8 +1,11 @@
 package com.example.dreamera_master;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,12 +16,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
 import com.example.adapter.MyPlaceRecyclerAdapter;
 import com.example.interfaces.OnItemLongClickListener;
+import com.example.utils.DialogUtil;
 import com.example.utils.HttpUtil;
 import com.example.utils.ParseJSON;
 import com.example.utils.Place;
@@ -46,17 +51,27 @@ public class MyPlaceActivity extends AppCompatActivity {
 
     private MyPlaceRecyclerAdapter adapter;
 
+    private ImageView deleteImg;
+
+    private final int PLACE_DELETE = 1;
+
     private static  SwipeRefreshLayout swipeRefreshLayout;
 
     private static Place concretePlace;
 
-    /**private Handler handler = new Handler() {
+    private ProgressDialog progressDialog;
+
+    private Handler handler = new Handler() {
         public void handleMessage(Message message) {
             switch (message.what) {
-                case
+                case PLACE_DELETE:
+                    DialogUtil.closeProgressDialog();
+                    finish();
+                    break;
+                default:
             }
         }
-    }*/
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +79,7 @@ public class MyPlaceActivity extends AppCompatActivity {
         myPlaceToolbar = (Toolbar) findViewById(R.id.my_place_toolbar);
         addPictureButton = (FloatingActionButton) findViewById(R.id.add_picture_floating_button);
         TextView titleText = (TextView) findViewById(R.id.my_place_title);
+        deleteImg = (ImageView) findViewById(R.id.my_place_delete);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.my_place_swipe_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         Intent intent = getIntent();
@@ -80,6 +96,56 @@ public class MyPlaceActivity extends AppCompatActivity {
         recyclerView.setVisibility(View.GONE);
         refreshPictures();
         addPicture();
+        setDeleteImgListener();
+    }
+
+    private void setDeleteImgListener() {
+        deleteImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(MyPlaceActivity.this);
+                alert.setTitle("删除当前地点？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                showProgressDialog();
+                                HttpUtil.deletePlace(placeId, new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                closeProgressDialog();
+                                                Toast.makeText(MyPlaceActivity.this, "网络原因,删除失败",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(MyPlaceActivity.this, "删除成功",
+                                                        Toast.LENGTH_SHORT).show();
+                                                closeProgressDialog();
+                                            }
+                                        });
+                                        Message message = new Message();
+                                        message.what = PLACE_DELETE;
+                                        handler.sendMessage(message);
+                                    }
+                                });
+                            }
+                        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).setCancelable(true).create().show();
+            }
+        });
     }
 
     @Nullable
@@ -127,7 +193,7 @@ public class MyPlaceActivity extends AppCompatActivity {
                         }
                         TextView pictureNullText = (TextView) findViewById(R.id.picture_null_text);
                         TextView noPicturesText = (TextView) findViewById(R.id.no_pictures_text);
-                        if (concretePlace.getPicturesList().size() > 0) {
+                        if (concretePlace.getPicturesList().size() > 0 && concretePlace != null) {
                             pictureNullText.setVisibility(View.GONE);
                             noPicturesText.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
@@ -218,5 +284,20 @@ public class MyPlaceActivity extends AppCompatActivity {
         super.onResume();
         swipeRefreshLayout.setRefreshing(true);
         loadingPictures(placeId);
+    }
+
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(MyPlaceActivity.this);
+            progressDialog.setMessage("正在删除...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+    }
+
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

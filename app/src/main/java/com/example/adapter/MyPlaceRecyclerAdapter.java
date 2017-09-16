@@ -15,6 +15,7 @@ import com.example.dreamera_master.MyPictureActivity;
 import com.example.dreamera_master.R;
 import com.example.interfaces.OnItemLongClickListener;
 import com.example.utils.MyPicture;
+import com.example.view.MarkerPopupWindowView;
 
 import java.util.List;
 
@@ -95,6 +96,10 @@ public class MyPlaceRecyclerAdapter extends RecyclerView.Adapter<MyPlaceRecycler
                 .placeholder(R.drawable.photo_insert)
                 .error(R.drawable.photo_error)
                 .into(holder.placeImage);
+        MarkerPopupWindowView.AsyncGetPicTask asyncGetPicTask =
+                new MarkerPopupWindowView.AsyncGetPicTask(holder.placeImage,
+                        myPicture.getPictureUrl(), String.valueOf(myPicture.getPictureId()));
+        asyncGetPicTask.execute();
     }
 
     @Override

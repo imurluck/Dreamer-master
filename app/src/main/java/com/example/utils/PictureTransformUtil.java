@@ -5,4 +5,10 @@ package com.example.utils;
  */
 
 public class PictureTransformUtil {
+
+    static {
+        System.loadLibrary("OpenCV");
+    }
+
+    public static native int[] ImgToGrey(int[] buf, int w, int h);
 }

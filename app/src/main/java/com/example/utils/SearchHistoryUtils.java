@@ -77,7 +77,7 @@ public class SearchHistoryUtils {
     public void deleteSearchHistory(String name) {
         SQLiteDatabase db = mHelper.getWritableDatabase();
         if (isExist(name)) {
-            db.delete(TABLE_NAME, "placeName = " + name, null);
+            db.delete(TABLE_NAME, "placeName = " +"'" + name + "'", null);
         }
     }
 }

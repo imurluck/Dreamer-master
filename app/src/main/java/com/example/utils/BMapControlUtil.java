@@ -36,6 +36,8 @@ import okhttp3.Response;
 
 public class BMapControlUtil {
 
+    private String TAG = "BMapControlUtil";
+
     private BaiduMap mBaiduMap;
 
     private ClusterManager mClusterManager;
@@ -67,7 +69,7 @@ public class BMapControlUtil {
                     for (int i = 0; i < crossPictures.length(); i ++) {
                         JSONObject pictureItem = crossPictures.getJSONObject(i);
                         String pictureTitie = pictureItem.getString("title");
-                        String pictureUrl = pictureItem.getString("picture");
+                        String pictureUrl = "http://www.dreamera.net:8080" + pictureItem.getString("picture");
                         String pictureId = pictureItem.getString("pk");
                         String placeId = pictureItem.getString("place");
                         String datetime = pictureItem.getString("datetime");
@@ -91,6 +93,7 @@ public class BMapControlUtil {
                         } else {
                             map.put("pictureLatitude", pictureLatitude);
                         }
+                        Log.e(TAG, "pictureUrl--" + pictureUrl);
                         pictureList.add(map);
                     }
                 } catch (JSONException e) {

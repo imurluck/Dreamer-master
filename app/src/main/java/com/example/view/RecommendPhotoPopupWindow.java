@@ -137,6 +137,8 @@ public class RecommendPhotoPopupWindow extends PopupWindow {
                         .Images.Media.LONGITUDE));
                 double latitude = cursor.getDouble(cursor.getColumnIndex(MediaStore
                         .Images.Media.LATITUDE));
+                Log.e(TAG, "getPhotoList: longitude =  " + longitude);
+                Log.e(TAG, "getPhotoList: latitude = " + latitude);
             if ((longitude != 0.0 || latitude != 0.0)) {
                     CoordinateConverter converter  = new CoordinateConverter();//转化坐标
                     converter.from(CoordinateConverter.CoordType.GPS);

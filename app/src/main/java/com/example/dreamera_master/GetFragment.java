@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.example.interfaces.CityInterface;
 import com.example.utils.CityItem;
 import com.example.utils.HttpUtil;
+import com.example.utils.ParseJSON;
 import com.example.utils.Place;
 import com.example.view.AddressSelector;
 import com.google.gson.Gson;
@@ -38,6 +40,8 @@ import okhttp3.Response;
  */
 public class GetFragment extends Fragment {
 
+    private String TAG = "GetFragment";
+
     //private ListView placesListView;
 
     private AddressSelector mAddressSelector;
@@ -53,6 +57,7 @@ public class GetFragment extends Fragment {
     //private final int DELETE_PLACE = 2;
 
     private final int REFRESH_PLACE = 3;
+    private final int PLACE_NOT_EXIST = 4;
 
     //private GetFragmentListAdapter adapter;
 
@@ -64,6 +69,8 @@ public class GetFragment extends Fragment {
     private ArrayList<CityItem> citys = new ArrayList<>();
     private ArrayList<CityItem> places = new ArrayList<>();
 
+    private CityItem choosedCityItem;
+
     //private List<String> placesList = new ArrayList<String>();
 
     private Handler handler = new Handler() {
@@ -74,6 +81,15 @@ public class GetFragment extends Fragment {
                     mAddressSelector.setCities(provinces);
                     if (swipeRefresh.isRefreshing()) {
                         swipeRefresh.setRefreshing(false);
+                    }
+                    break;
+                case PLACE_NOT_EXIST:
+                    Log.e(TAG, "handleMessage: ");
+                    if (choosedCityItem != null && places != null && mAddressSelector != null) {
+                        if (places.contains(choosedCityItem)) {
+                            places.remove(choosedCityItem);
+                            mAddressSelector.notifyAdapter();
+                        }
                     }
                     break;
                 default:
@@ -129,10 +145,13 @@ public class GetFragment extends Fragment {
                         mAddressSelector.setCities(places);
                         break;
                     case 2:
-                        Intent intent = new Intent(getActivity(), MyPlaceActivity.class);
-                        intent.putExtra("placeName", city.getCityName());
-                        intent.putExtra("placeId", ((CityItem) city).getPlaceId());
-                        startActivity(intent);
+                        if (city != null) {
+                            Intent intent = new Intent(getActivity(), MyPlaceActivity.class);
+                            intent.putExtra("placeName", city.getCityName());
+                            intent.putExtra("placeId", ((CityItem) city).getPlaceId());
+                            choosedCityItem = (CityItem) city;
+                            startActivity(intent);
+                        }
                         break;
                 }
             }
@@ -308,4 +327,32 @@ public class GetFragment extends Fragment {
             }
         });
     }*/
+
+    private void notifyPlaces() {
+        if (choosedCityItem != null) {
+            HttpUtil.getConCretePlace(choosedCityItem.getPlaceId(), new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String jsonData = response.body().string();
+                    Place place = ParseJSON.handleJSONForConcretePlace(jsonData);
+                    if (place.getName() == null) {
+                        Message msg = new Message();
+                        msg.what = PLACE_NOT_EXIST;
+                        handler.sendMessage(msg);
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onResume() {
+        notifyPlaces();
+        super.onResume();
+    }
 }

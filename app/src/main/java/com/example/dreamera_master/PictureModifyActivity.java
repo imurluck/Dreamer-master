@@ -2,6 +2,8 @@ package com.example.dreamera_master;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.util.Calendar;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -24,12 +26,13 @@ import android.widget.Toast;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bumptech.glide.Glide;
+import com.example.utils.AsyncGetDataUtil;
 import com.example.utils.BlurTransformation;
 import com.example.utils.DialogUtil;
-import com.example.utils.GreyPicTransform;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
 import com.example.utils.MyPicture;
+import com.example.utils.PictureTransformUtil;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -89,6 +92,8 @@ public class PictureModifyActivity extends AppCompatActivity {
 
     private final int MODIFY_COMPLETED = 1;
 
+    private Bitmap bitmap;
+
     private Map<String, String> paraMap = new HashMap<String, String>();
 
     private Handler handler = new Handler() {
@@ -131,9 +136,15 @@ public class PictureModifyActivity extends AppCompatActivity {
         modify = (Button) findViewById(R.id.picture_modify_modify);
         cancel = (Button) findViewById(R.id.picture_modify_cancel);
         camera = (Button) findViewById(R.id.picture_modify_camera);
-        Glide.with(this).load(myPicture.getPictureUrl())
-                .bitmapTransform(new BlurTransformation(this))
-                .into(imageView);
+        Bitmap picFromFile = AsyncGetDataUtil.getPicFromFile(String.valueOf(myPicture.getPictureId()));
+        if (picFromFile != null) {
+            picFromFile = convertGreyImg(picFromFile);
+            imageView.setImageBitmap(picFromFile);
+        } else {
+            Glide.with(this).load(myPicture.getPictureUrl())
+                    .bitmapTransform(new BlurTransformation(this))
+                    .into(imageView);
+        }
         initEditText();
         choosePhoto();
         chooseTime();
@@ -271,6 +282,8 @@ public class PictureModifyActivity extends AppCompatActivity {
                         String pictureLatitudeRef = exifInterface.getAttribute(
                                 ExifInterface.TAG_GPS_LATITUDE_REF);
                         if (pictureLatitude != null && pictureLongitude != null) {
+                            Log.e(TAG, "Latitude" + pictureLatitude);
+                            Log.e(TAG, "Longitude" + pictureLongitude);
                             CoordinateConverter converter  = new CoordinateConverter();//转化坐标
                             converter.from(CoordinateConverter.CoordType.GPS);
                             converter.coord(new LatLng(
@@ -399,8 +412,63 @@ public class PictureModifyActivity extends AppCompatActivity {
         });
     }
     private void showImage() {
-         Glide.with(this).load(pictureUrl)
-                 .bitmapTransform(new GreyPicTransform(this))
-                 .into(imageView);
+        bitmap = getConvertedGreyImg(pictureUrl);
+        imageView.setImageBitmap(bitmap);
+        //Glide.with(this).load(pictureUrl)
+                 //.diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                 //.bitmapTransform(new GreyPicTransform(this))
+                 //.override(Target.SIZE_ORIGINAL)
+                 //.into(imageView);
      }
+
+    private Bitmap getConvertedGreyImg(String pictureUrl) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(pictureUrl, newOpts);
+
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        float hh = 800f;
+        float ww = 480f;
+
+        int be = 1;
+        if (w > h && w > ww) {
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0) {
+            be = 1;
+        }
+        newOpts.inSampleSize = be;
+        bitmap = BitmapFactory.decodeFile(pictureUrl, newOpts);
+        bitmap = convertGreyImg(bitmap);
+        return bitmap;
+    }
+
+     public Bitmap convertGreyImg(Bitmap bitmap) {
+         int w = bitmap.getWidth();
+         int h = bitmap.getHeight();
+         int[] pix = new int[w * h];
+         bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+         pix = PictureTransformUtil.ImgToGrey(pix, w, h);
+         Bitmap resultImg = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+         resultImg.setPixels(pix, 0, w, 0, 0, w, h);
+         pix = null;
+         return resultImg;
+     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bitmap != null) {
+            bitmap.recycle();
+        }
+    }
 }

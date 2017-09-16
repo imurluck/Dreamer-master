@@ -2,9 +2,7 @@ package com.example.dreamera_master;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -312,18 +310,16 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                         closeProgressDialog();
                         Place place;
                         String responseContent = response.body().string();
+                        Log.e(TAG, "onResponse: " + responseContent);
                         place = ParseJSON.handleJSONForConcretePlace(responseContent);
-                        SharedPreferences.Editor editor = MyApplication.getContext().getSharedPreferences("places",
-                                Context.MODE_PRIVATE).edit();
-                        editor.putString(place.getName(), String.valueOf(place.getPlaceId()));
-                        editor.apply();
                         Intent intent = new Intent(getActivity(), MyPlaceActivity.class);
                         intent.putExtra("placeName", addressEdit.getText().toString());
+                        intent.putExtra("placeId", String.valueOf(place.getPlaceId()));
                         startActivity(intent);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(MyApplication.getContext(), "upLoad completed!",
+                                Toast.makeText(MyApplication.getContext(), "上传成功!",
                                         Toast.LENGTH_SHORT).show();
                             }
                         });

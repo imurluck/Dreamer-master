@@ -170,6 +170,12 @@ public class AddressSelector extends LinearLayout implements View.OnClickListene
         }
     }
 
+    public void notifyAdapter() {
+        if (addressAdapter != null) {
+            addressAdapter.notifyDataSetChanged();
+        }
+    }
+
     /**
      * 设置顶部tab的事件回调
      * @param listener

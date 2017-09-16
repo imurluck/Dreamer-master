@@ -2,6 +2,8 @@ package com.example.dreamera_master;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.util.Calendar;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -22,10 +24,10 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
-import com.bumptech.glide.Glide;
 import com.example.utils.DialogUtil;
 import com.example.utils.HandleImagePath;
 import com.example.utils.HttpUtil;
+import com.example.utils.PictureTransformUtil;
 import com.example.view.RecommendPhotoPopupWindow;
 
 import java.io.File;
@@ -74,6 +76,8 @@ public class AddPictureActivity extends AppCompatActivity {
     private String placeId;
 
     private Uri imageUri;
+
+    private Bitmap bitmap;
 
     private RecommendPhotoPopupWindow recommendPhotoPopupWindow;
 
@@ -161,11 +165,51 @@ public class AddPictureActivity extends AppCompatActivity {
     }
 
     public void showPicture(String pictureUrl) {
-        Glide.with(this).load(pictureUrl)
+        bitmap = getConvertedGreyImg(pictureUrl);
+        imageView.setImageBitmap(bitmap);
+        //Glide.with(this).load(pictureUrl)
                 //.diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 //.bitmapTransform(new GreyPicTransform(this))
-                .into(imageView);
+                //.into(imageView);
         this.photoIsChoosed = true;
+    }
+
+    private Bitmap getConvertedGreyImg(String pictureUrl) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(pictureUrl, newOpts);
+
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        float hh = 800f;
+        float ww = 480f;
+
+        int be = 1;
+        if (w > h && w > ww) {
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0) {
+            be = 1;
+        }
+        newOpts.inSampleSize = be;
+        bitmap = BitmapFactory.decodeFile(pictureUrl, newOpts);
+        bitmap = convertGreyImg(bitmap);
+        return bitmap;
+    }
+
+    public Bitmap convertGreyImg(Bitmap bitmap) {
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        int[] pix = new int[w * h];
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+        pix = PictureTransformUtil.ImgToGrey(pix, w, h);
+        Bitmap resultImg = Bitmap.createBitmap(w, h, Bitmap.Config.RGB_565);
+        resultImg.setPixels(pix, 0, w, 0, 0, w, h);
+        pix = null;
+        return resultImg;
     }
 
     public void setPictureLatLng(LatLng latLng) {
@@ -362,5 +406,13 @@ public class AddPictureActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bitmap != null) {
+            bitmap.recycle();
+        }
     }
 }
