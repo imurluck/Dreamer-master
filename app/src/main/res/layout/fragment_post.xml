@@ -123,4 +123,29 @@
         android:clickable="true"
         android:src="@drawable/location"
         app:backgroundTint="@android:color/white" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="right|top"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="30dp">
+
+        <RadioButton
+            android:id="@+id/present_map_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radio_button_bck"
+            android:button="@drawable/new_map_icon"/>
+        <RadioButton
+            android:id="@+id/old_map_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/radio_button_bck"
+            android:button="@drawable/old_map_icon"
+            />
+
+    </RadioGroup>
 </FrameLayout>

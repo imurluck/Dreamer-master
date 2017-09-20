@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,7 @@ import com.example.utils.HttpUtil;
 import com.example.utils.ParseJSON;
 import com.example.utils.Place;
 import com.example.utils.navigationutils.NavigationUtil;
+import com.example.view.OldMapChoosePop;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -127,6 +131,12 @@ public class PostFragment extends Fragment implements View.OnClickListener {
 
     private NavigationUtil mNavigationUtil;
 
+    private OldMapChoosePop oldMapChoosePop;
+
+    private RadioGroup mChooseMapRadio;
+    private RadioButton mPresentMapRadio;
+    private RadioButton mOldMapRadio;
+
     public PostFragment() {
         // Required empty public constructor
         Log.e(TAG, "postFragment excute");
@@ -148,6 +158,10 @@ public class PostFragment extends Fragment implements View.OnClickListener {
         mapView = (MapView) view.findViewById(R.id.bd_map_view);
         locationFloatingButton = (FloatingActionButton) view.findViewById(
                 R.id.location_floating_button);
+        mChooseMapRadio = (RadioGroup) view.findViewById(R.id.radio_group);
+        mPresentMapRadio = (RadioButton) view.findViewById(R.id.present_map_button);
+        mPresentMapRadio.setChecked(true);
+        mOldMapRadio = (RadioButton) view.findViewById(R.id.old_map_button);
         baiduMap = mapView.getMap();
         baiduMap.setMyLocationEnabled(true);
         //chooseDatetime.setOnClickListener(this);
@@ -165,6 +179,8 @@ public class PostFragment extends Fragment implements View.OnClickListener {
                 }
             });
         }
+        setRadioGroupListener();
+        setOldRadioListener();
         return view;
     }
 
@@ -189,6 +205,41 @@ public class PostFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 isFirstLocate = true;
                 navigateTo(currentLocation);
+            }
+        });
+    }
+
+    private void setRadioGroupListener() {
+        mChooseMapRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.present_map_button:
+                        if (oldMapChoosePop != null) {
+                            oldMapChoosePop.dismissOldMap();
+                            oldMapChoosePop.dismiss();
+                        }
+                        break;
+                    case R.id.old_map_button:
+                        if (oldMapChoosePop == null) {
+                            oldMapChoosePop = new OldMapChoosePop(getContext(), baiduMap);
+                        }
+                        oldMapChoosePop.showAtLocation(addPlace, Gravity.BOTTOM, 0, 0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setOldRadioListener() {
+        mOldMapRadio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOldMapRadio.isChecked() && !oldMapChoosePop.isShowing()) {
+                    oldMapChoosePop.showAtLocation(addPlace, Gravity.BOTTOM, 0, 0);
+                }
             }
         });
     }
